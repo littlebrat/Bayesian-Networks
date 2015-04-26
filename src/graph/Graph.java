@@ -1,6 +1,5 @@
 package graph;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 
 public abstract class Graph
@@ -30,7 +29,7 @@ public abstract class Graph
 		return "Graph [dim=" + dim + ", grph=" + Arrays.toString(grph) + "]";
 	}
     
-    abstract public Parent getParents(int x);
+    abstract public Parents getParents(int x);
     
     abstract Starter get(int node);
     

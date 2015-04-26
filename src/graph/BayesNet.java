@@ -1,6 +1,6 @@
 package graph;
 
-import java.util.ArrayList;
+
 
 public class BayesNet extends Graph
 {
@@ -46,14 +46,14 @@ public class BayesNet extends Graph
 	}
 
 	@Override
-	public Parent getParents(int x) 
+	public Parents getParents(int x) 
 	{
 		// TODO Auto-generated method stub
-		Parent prts = new Parent();
+		Parents prts = new Parents();
 		for (Edge edge : grph) 
 		{
 			if(edge.contains(x) && edge.getStarter().value()!=x)
-				prts.add()
+				prts.add(edge.getStarter());
 		}
 		return null;
 	}

@@ -9,7 +9,7 @@ public class Main {
 	public static void main(String[] args)
 	{
 		Input userIn = new Input(args);
-		
+		System.out.println("Hello World!!!!!!!!!!!!!!!!!!!!!!!");
 	}
 	
 	
