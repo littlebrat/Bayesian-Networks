@@ -14,11 +14,11 @@ public class Starter extends Node
 		cfgs = cf;
 	}
 	
-	protected void calcTable()
-	{
-		es= new Estimate(cfgs,prts[]);//fiquei aqui
-		
-	}
+//	protected void calcTable()
+//	{
+//		es= new Estimate(cfgs,prts[]);//fiquei aqui
+//		
+//	}
 	
 	protected void refreshParents()
 	{

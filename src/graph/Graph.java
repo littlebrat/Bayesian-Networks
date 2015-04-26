@@ -1,15 +1,38 @@
 package graph;
 
-public class Graph
+import java.util.ArrayList;
+import java.util.Arrays;
+
+public abstract class Graph
 {
-	protected int n;
+	private int dim;
     protected Edge[] grph;
     
-    Graph(int dim) 
+    public Graph(Configuration[] cfs) // put all the configurations here
     {
-        n = dim;
-        grph = new Edge[n];
+        dim = cfs.length;
+        grph = new Edge[dim];
+        for (int i = 0; i < cfs.length; i++) {
+			grph[i]=new Edge(i,cfs[i]);
+		}
     }
     
+    abstract public void add(int ori,int dest);
     
+    abstract public void remove(int ori,int dest);
+    
+    abstract public boolean isEmpty();
+    
+    abstract public void reverse(int ori,int dest);
+    
+    @Override
+	public String toString() {
+		return "Graph [dim=" + dim + ", grph=" + Arrays.toString(grph) + "]";
+	}
+    
+    abstract public Parent getParents(int x);
+    
+    abstract Starter get(int node);
+    
+    abstract public void refresh();
 }

@@ -4,12 +4,11 @@ import java.util.ArrayList;
 
 public class Edge 
 {
-	protected ArrayList<Node> nodelist;
-	protected Starter strt;
+	private ArrayList<Node> nodelist= new ArrayList<Node>();
+	private Starter strt;
 	
 	protected Edge(int str,Configuration c)
 	{
-		nodelist = new ArrayList<Node>();
 		strt=new Starter(str,c);
 	}
 	
@@ -28,6 +27,18 @@ public class Edge
 		return strt;
 	}
 
+	protected boolean isEmpty()
+	{
+		if(nodelist.isEmpty())
+			return true;
+		else return false;
+	}
+	
+	protected boolean contains(int node)
+	{
+		return nodelist.contains(new Node(node));
+	}
+	
 	@Override
 	public String toString() {
 		return "Edge [nodelist=" + nodelist + ", strt=" + strt + "]";
