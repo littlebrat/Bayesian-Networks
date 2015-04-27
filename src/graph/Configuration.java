@@ -1,5 +1,6 @@
 package graph;
 
+
 public class Configuration {
 	protected VarValue[] val; 
 	

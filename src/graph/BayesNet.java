@@ -4,7 +4,6 @@ package graph;
 
 public class BayesNet extends Graph
 {
-	
 	public BayesNet(Configuration[] cfs) 
 	{
 		super(cfs);
