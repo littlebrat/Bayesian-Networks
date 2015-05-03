@@ -42,34 +42,6 @@ public class AdjacencyMatrix implements Graph{
 		mat[dest][ori]=1;
 	}
 	
-	public boolean cycleQ(){
-		if(size()>1){
-			Stack<Integer> stack = new Stack<Integer>();
-			int visited[] = new int[size()];
-			int through[] = new int[size()];
-			
-			int i=0;
-			while(i<size() && visited[0]!=0){
-				int j=0;
-				while(j<size() && visited[0]!=0){
-					if(mat[i][j]!=0){
-						visited[0]=mat[i][j];
-						through[0]=-1;
-						stack.push(mat[i][j]);
-					}
-					j++;
-				}
-				i++;
-			}
-					
-			while(!stack.isEmpty()){
-				
-			}
-			
-		}
-		return false;
-	}
-
 	@Override
 	public ArrayList<Integer> getDests(int x) {
 		// TODO Auto-generated method stub

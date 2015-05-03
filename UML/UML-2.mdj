@@ -12999,12 +12999,12 @@
 							"showShadow": true,
 							"containerChangeable": false,
 							"containerExtending": false,
-							"left": 1608,
-							"top": 64,
-							"width": 228,
-							"height": 104,
+							"left": 1568,
+							"top": 188,
+							"width": 169,
+							"height": 44,
 							"autoResize": false,
-							"text": "Falta completar a interface",
+							"text": "Aqui fica melhor uma classe abstracta",
 							"wordWrap": true
 						},
 						{
