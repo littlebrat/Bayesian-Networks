@@ -1,23 +1,22 @@
 package graph;
 
-public class Node 
-{
-	private int node;
+public class Node {
+	private int val;
 	
-	
-	protected Node(int no)
-	{
-		node = no;
+	protected Node(int n){
+		val=n;
 	}
 	
-	protected int value()
-	{
-		return node;
+	protected int getValue(){
+		return val;
 	}
 
 	@Override
-	public String toString() {
-		return "Node [node=" + node + "]";
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + val;
+		return result;
 	}
 
 	@Override
@@ -29,7 +28,7 @@ public class Node
 		if (getClass() != obj.getClass())
 			return false;
 		Node other = (Node) obj;
-		if (node != other.node)
+		if (val != other.val)
 			return false;
 		return true;
 	}
