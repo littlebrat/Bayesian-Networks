@@ -3,7 +3,7 @@ package data;
 import java.util.Arrays;
 
 public class Event {
-	private int[] occurrences;
+	int[] occurrences;
 	public Event(int size){
 		occurrences=new int[size];	
 	}

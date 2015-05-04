@@ -7,7 +7,7 @@ import java.io.*;
 
 
 
-public class DataTest {
+public class DataTest extends Data{
 	protected TimeSample testing = new TimeSample();
 	
 	public void readData(String url) throws IOException {
