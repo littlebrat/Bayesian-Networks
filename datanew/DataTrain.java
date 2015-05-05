@@ -1,10 +1,13 @@
 package data;
 import java.io.*;
+import java.util.Arrays;
 
-public class DataTrain extends Data{
+public class DataTrain implements Data{
 	protected TimeSample[] training = new TimeSample[2];
+	protected int num_va=0;
+	protected int size=0;
 	
-	public void readData(String url) throws IOException {
+	public DataTrain(String url) throws IOException {
 		// TODO Auto-generated method stub
 		int i=0;
 		int j;
@@ -19,27 +22,22 @@ public class DataTrain extends Data{
 			count=count+1;
 			i++;
 		}	
-
+		num_va=count;
 		dataRow = commaFile.readLine();
 		training[0]=new TimeSample(); //Training t
 		training[1]=new TimeSample(); //Training t+1
 		while (dataRow!= null){
 			String [] data = dataRow.split (",");//Colunas separadas por virgula
-			int [] lista =new int[data.length];
-			
 			i=0;
 			j=1;
 			while(j<(data.length)/count){
 				int [] listafin= new int[count];
 				p=0;
 				while (i<j*count) {
-					lista [i]= Integer.parseInt(data[i]);
 					listafin[p]=Integer.parseInt(data[i]);
 					i++;
-					p++;
-					
+					p++;	
 				}
-				
 				
 				if(data[i+1]!=null){
 				Event evt=new Event(listafin.length);
@@ -49,11 +47,11 @@ public class DataTrain extends Data{
 				evt.add(listafin);
 				inext=i;
 				jnxt=j+1;
+				size=size+1;
 					while (inext<jnxt*count) {
 						listafinnxt[p]=Integer.parseInt(data[inext]);
 						inext++;
 						p++;
-					
 					}
 					evtnxt.add(listafinnxt);
 				this.training[0].add(evt);	
@@ -61,23 +59,19 @@ public class DataTrain extends Data{
 				i=j*count;
 				j++;
 				}
-				
-			}
-			
-				dataRow = commaFile.readLine();//Mudar de linha
-		
+			}	
+			dataRow = commaFile.readLine();//Mudar de linha
 	}
-		
-		
-		
 		commaFile.close ();
 	}
-	@Override
+	
+	 @Override
 	public String toString() {
-		return "DataTrain1 [training=" + training[0] + "]" + "DataTrain2 [training=" + training[1] + "]";
+		return "DataTrain [training=" + Arrays.toString(training) + ", num_va="
+				+ num_va + ", size=" + size + "]";
 	}
 
-	 int getcfg(int va){
+	int getcfg(int va){
 		int rank = 0;
 		int max =0;
 		int index =0;
@@ -92,9 +86,21 @@ public class DataTrain extends Data{
 		return rank;
 	}
 
+
+	@Override
+	public int[][] get(){
+		int i=0;
+		int j=0;
+		int vect[][] =new int[this.size][2*(this.num_va)];
+		for(i=0;i<this.size;i++){
+			for(j=0;j<this.num_va;j++){
+				vect[i][j]=this.training[0].samples.get(i).occurrences[j];
+			}
+			for(j=3;j<2*(this.num_va);j++){
+				vect[i][j]=this.training[1].samples.get(i).occurrences[j-3];
+			}
+		}
+		
+		return vect;
+	}
 }
-
-	
-	
-
-

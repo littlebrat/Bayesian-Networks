@@ -1,10 +1,7 @@
 package data;
 
-import java.io.IOException;
-
-public abstract class Data {
+public interface Data {
 
 	
-	public abstract void readData(String url) throws IOException;
-
+	public abstract int[][] get();
 }
