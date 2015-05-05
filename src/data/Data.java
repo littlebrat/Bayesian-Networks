@@ -1,16 +1,7 @@
 package data;
 
+public interface Data {
 
-import java.util.ArrayList;
-
-public abstract class Data {
-	private ArrayList<TimeSample> datalist= new ArrayList<TimeSample>();
-	 
-	abstract public void readData(String url);  
-	  
-	@Override
-	public String toString() {
-		return "Data [datalist=" + datalist + "]";
-	}
 	
+	public abstract int[][] get();
 }

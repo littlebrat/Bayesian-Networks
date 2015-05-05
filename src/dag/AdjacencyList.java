@@ -17,7 +17,7 @@ public class AdjacencyList implements Graph{
 	@Override
 	public void add(int ori, int dest) {
 		// TODO Auto-generated method stub
-		if(ori>=0 && ori<size() && dest>=0 && dest<size())
+		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest)
 			if(reachable(dest)[ori]==0){
 				originlist[ori].add(dest);
 			}
@@ -26,7 +26,7 @@ public class AdjacencyList implements Graph{
 	@Override
 	public void remove(int ori, int dest) {
 		// TODO Auto-generated method stub
-		if(ori>=0 && ori<size() && dest>=0 && dest<size())
+		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest)
 			originlist[ori].remove(dest);
 	}
 
@@ -44,9 +44,11 @@ public class AdjacencyList implements Graph{
 	@Override
 	public void reverse(int ori, int dest) {
 		// TODO Auto-generated method stub
-		if(ori>=0 && ori<size() && dest>=0 && dest<size()){
+		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest){
 			originlist[ori].remove(dest);
-			originlist[dest].add(ori);
+			if(reachable(ori)[dest]==0)
+				originlist[dest].add(ori);
+			else originlist[ori].add(dest);
 		}
 	}
 
@@ -71,6 +73,17 @@ public class AdjacencyList implements Graph{
 	public ArrayList<Integer> getDests(int x) {
 		// TODO Auto-generated method stub
 		return originlist[x].getDests();
+	}
+	
+	@Override
+	public ArrayList<Integer> getOrigins(int x) {
+		// TODO Auto-generated method stub
+		ArrayList<Integer> ori = new ArrayList<Integer>();
+		for (Origin origin : originlist) {
+			if(origin.contains(x))
+				ori.add(origin.getValue());
+		}
+		return ori;
 	}
 
 	@Override

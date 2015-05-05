@@ -71,5 +71,11 @@ public class AdjacencyMatrix implements Graph{
 		}
 		return s;
 	}
+
+	@Override
+	public ArrayList<Integer> getOrigins(int x) {
+		// TODO Auto-generated method stub
+		return null;
+	}
 	
 }

@@ -16,6 +16,8 @@ public interface Graph {
 	
 	public ArrayList<Integer> getDests(int x);
 	
+	public ArrayList<Integer> getOrigins(int x);
+	
 	public int size();
 	
 }
