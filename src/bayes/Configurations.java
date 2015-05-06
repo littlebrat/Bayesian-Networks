@@ -4,32 +4,33 @@ import java.util.Arrays;
 
 public class Configurations {
 	private int[] cfgs;
-	private int len;
 	
 	protected Configurations(int[][] data){
-		cfgs=new int[data[0].length/2];
+		cfgs=new int[data[0].length];
 		int max;
-		for (int i = 0; i < (data[0].length)/2; i++) {
+		for (int i = 0; i < (data[0].length); i++) {
 			max=-1;
 			for (int j = 0; j < data.length; j++) {
 				if(max<data[j][i]) max=data[j][i];
 			}
 			cfgs[i]=max;
 		}
-		len=data[0].length/2;
 	}
 	
-	protected int get(int pos){
-		return cfgs[pos];
+	protected int getmax(int var){
+		return cfgs[var];
+	}
+	
+	protected int ri(int var){
+		return cfgs[var]+1;
 	}
 	
 	protected int size(){
-		return len;
+		return cfgs.length;
 	}
 	
 	@Override
 	public String toString() {
 		return Arrays.toString(cfgs);
 	}
-	
 }

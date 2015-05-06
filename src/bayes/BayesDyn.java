@@ -1,5 +1,6 @@
 package bayes;
 
+import java.io.IOException;
 import java.util.Arrays;
 
 import dag.AdjacencyList;
@@ -8,27 +9,20 @@ import dag.Graph;
 public class BayesDyn implements BayesianNetwork{
 	protected BayesTransitionGraph mynet;
 	protected Score scr;
-	protected int[][] learning;
-	protected int[][] testing;
-	protected Configurations cfgs;
 	private int nvars;
 	
 	public BayesDyn(Data d,String s){
-		if(s.equals("MDL"))	scr = new ScoreMDL();
-		else if(s.equals("LL")) scr = new ScoreLL();
-		
-		learning = d.getTraining();
-		testing = d.getTesting();
-		
-		cfgs = new Configurations(learning);
+		int [][] learning = d.getTraining();
+		int [][] testing = d.getTesting();
+		Configurations cfgs = new Configurations(learning);
+		nvars=learning[0].length/2;
 		mynet = new BayesTransitionGraph(learning[0].length);
 		
-		/*Faltam coisas*/
+		if(s.equals("MDL"))	scr = new ScoreMDL(learning,testing,cfgs);
+		else if(s.equals("LL")) scr = new ScoreLL(learning,testing,cfgs);
+		else throw new IOException("The chosen type of score is neither of the availables scores.");
 	}
 
-	
-	
-	@Override
 	public String toString() {
 		String r = new String();
 		r="Network: \n"+mynet.toString();
@@ -105,14 +99,12 @@ public class BayesDyn implements BayesianNetwork{
 		return best;
 	}
 	
-	
-	@Override
 	public void greedyHill() {
 		// TODO Auto-generated method stub
 		/*Graph res = grp;
 		Graph aux = res;
 		Graph neighbour;
-		
+		//precisamos de ver se a aresta foi mesmo adicionada, caso contrario, nao e necessario calcular o score
 		while(score(aux)<score(neighbour)){
 			if(score(res))
 		}
