@@ -2,7 +2,6 @@ package bayes;
 
 import java.io.IOException;
 import java.util.Arrays;
-
 import dag.AdjacencyList;
 import dag.Graph;
 
@@ -18,8 +17,8 @@ public class BayesDyn implements BayesianNetwork{
 		nvars=learning[0].length/2;
 		mynet = new BayesTransitionGraph(learning[0].length);
 		
-		if(s.equals("MDL"))	scr = new ScoreMDL(learning,testing,cfgs);
-		else if(s.equals("LL")) scr = new ScoreLL(learning,testing,cfgs);
+		if(s.equals("MDL"))	scr = new ScoreMDL(cfgs,learning,testing);
+		else if(s.equals("LL")) scr = new ScoreLL(cfgs,learning,testing);
 		else throw new IOException("The chosen type of score is neither of the availables scores.");
 	}
 
@@ -40,7 +39,7 @@ public class BayesDyn implements BayesianNetwork{
 			intra=mynet;
 			for (int j = 0; j < nvars; j++) {
 				intra.add(i,j);
-				if(score(intra)>score(best)) best=intra;
+				if(scr.getScore(intra)>scr.getScore(best)) best=intra;
 			}
 		}
 		intra=best;
@@ -49,11 +48,11 @@ public class BayesDyn implements BayesianNetwork{
 			inter=mynet;
 			for (int j = 0; j < nvars; j++) {
 				inter.addInter(i,j);
-				if(score(inter)>score(best)) best=inter;
+				if(scr.getScore(inter)>scr.getScore(best)) best=inter;
 			}
 		}
 		inter=best;
-		if(score(inter)>score(intra)) return inter;
+		if(scr.getScore(inter)>scr.getScore(intra)) return inter;
 		else return intra;
 	}
 	
@@ -67,7 +66,7 @@ public class BayesDyn implements BayesianNetwork{
 			intra=mynet;
 			for (int j = 0; j < nvars; j++) {
 				intra.remove(i,j);
-				if(score(intra)>score(best)) best=intra;
+				if(scr.getScore(intra)>scr.getScore(best)) best=intra;
 			}
 		}
 		intra=best;
@@ -76,11 +75,11 @@ public class BayesDyn implements BayesianNetwork{
 			inter=mynet;
 			for (int j = 0; j < nvars; j++) {
 				inter.removeInter(i,j);
-				if(score(inter)>score(best)) best=inter;
+				if(scr.getScore(inter)>scr.getScore(best)) best=inter;
 			}
 		}
 		inter=best;
-		if(score(inter)>score(intra)) return inter;
+		if(scr.getScore(inter)>scr.getScore(intra)) return inter;
 		else return intra;
 	}
 	
@@ -93,7 +92,7 @@ public class BayesDyn implements BayesianNetwork{
 			intra=mynet;
 			for (int j = 0; j < nvars; j++) {
 				intra.add(i,j);
-				if(score(intra)>score(best)) best=intra;
+				if(scr.getScore(intra)>scr.getScore(best)) best=intra;
 			}
 		}
 		return best;

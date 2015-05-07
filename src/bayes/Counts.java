@@ -1,23 +1,16 @@
 package bayes;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-
 public class Counts {
 	int[] myparents;
 	int me;
-	Configurations cfgs;
+	static Configurations cfgs;
 	int[][] countTable;
 	
-	public Counts(int var,ArrayList<Integer> parents,Configurations cfgs){
+	protected Counts(int var,int[] parents){
 		// TODO Auto-generated constructor stub
 		me=var;
-		this.cfgs=cfgs;
-		if(parents.size()>0){
-			myparents=new int[parents.size()];
-			for (int i = 0; i < parents.size(); i++) {
-				myparents[i]=parents.get(i);
-			}
+		if(parents.length>0){
+			myparents=parents;
 			countTable=new int[cfgs.ri(me)][getq()];
 		}
 		else{
@@ -25,12 +18,19 @@ public class Counts {
 		}
 	}
 	
-	private int getq(){
-		int res=1;
-		for (int j = 0; j < myparents.length; j++) {
-			res=cfgs.ri(myparents[j]);
+	protected void setupConfig(Configurations c){
+		cfgs=c;
+	}
+	
+	int getq(){
+		if(myparents.length>0){
+			int res=1;
+			for (int j = 0; j < myparents.length; j++) {
+				res=cfgs.ri(myparents[j]);
+			}
+			return res;
 		}
-		return res;
+		else return 0;
 	}
 	
 	double getMyB(){
@@ -59,23 +59,32 @@ public class Counts {
 	}
 	
 	void addcount(int k,int[] p){
-		countTable[k][getGlobal(p)]+=1;
+		if(myparents.length>0){
+			countTable[k][getGlobal(p)]+=1;
+		}
+		else{
+			countTable[k][0]+=1;
+		}
 	}
 	
 	int getNij(int global){
 		int res=0;
 		for (int k = 0; k < cfgs.ri(me); k++) {
-			res+=countTable[k][global];
+			res+=getNijk(global,k);
 		}
 		return res;
 	}
 	
 	int getNijk(int global,int k){
-		return countTable[k][global];
+		if(myparents.length>0)
+			return countTable[k][global];
+		else return countTable[k][0];
 	}
 	
 	public static void main(String args[]){
+			int[] hello =new int[0];
 			
+			System.out.println(hello.length);
 	}
 	
 }
