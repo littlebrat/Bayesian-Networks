@@ -57,7 +57,7 @@ public class BayesTransitionGraph extends AdjacencyList{
 		return res;
 	}
 	
-	public int[] getParents(int x){//mudaste de Integer para int, nao foi testado se ta bem
+	public int[] getParents(int x){//adicionar exceptioon
 		int[] res;
 		ArrayList<Integer> temp = getOrigins(x);
 		res = new int[temp.size()];

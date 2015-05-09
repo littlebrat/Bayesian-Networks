@@ -17,10 +17,11 @@ public class AdjacencyList implements Graph{
 	@Override
 	public void add(int ori, int dest) {
 		// TODO Auto-generated method stub
-		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest)
+		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest){
 			if(reachable(dest)[ori]==0){
 				originlist[ori].add(dest);
 			}
+		}
 	}
 
 	@Override

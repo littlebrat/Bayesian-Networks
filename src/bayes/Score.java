@@ -14,7 +14,6 @@ public abstract class Score {
 		testing=totest;
 		this.cfg=cfg;
 		varcounts = new Counts[cfg.size()];
-		varcounts[0].setupConfig(cfg);
 	}
 	
 	protected Score(Configurations cfg,int[][] tolearn,int[][] totest,int pseudo){
@@ -22,7 +21,6 @@ public abstract class Score {
 		testing=totest;
 		this.cfg=cfg;
 		varcounts = new Counts[cfg.size()];
-		varcounts[0].setupConfig(cfg);
 		this.pseudo=pseudo;
 	}
 	
@@ -55,7 +53,7 @@ public abstract class Score {
 		// construir a lista das configuracoes dos pais e iniciar os objectos das counts
 		for (int i = 0; i < grp.size(); i++) {
 			fathers.add(grp.getParents(i));
-			varcounts[i]=new Counts(i,fathers.get(i));
+			varcounts[i]=new Counts(i,fathers.get(i),cfg);
 		}
 		int[] temp;
 		int[] ocorrencia;
