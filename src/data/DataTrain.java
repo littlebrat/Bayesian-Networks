@@ -4,8 +4,8 @@ import java.util.Arrays;
 
 public class DataTrain implements Data{
 	protected TimeSample[] training = new TimeSample[2];
-	protected int num_va=0;
-	protected int size=0;
+	public int num_va=0;
+	public int size=0;
 	
 	public DataTrain(String url) throws IOException {
 		// TODO Auto-generated method stub
@@ -92,15 +92,18 @@ public class DataTrain implements Data{
 		int i=0;
 		int j=0;
 		int vect[][] =new int[this.size][2*(this.num_va)];
-		for(i=0;i<this.size;i++){
-			for(j=0;j<this.num_va;j++){
-				vect[i][j]=this.training[0].samples.get(i).occurrences[j];
-			}
-			for(j=3;j<2*(this.num_va);j++){
-				vect[i][j]=this.training[1].samples.get(i).occurrences[j-3];
-			}
-		}
 		
+		for(int time=0; time<2; time++){
+			i=0;
+			for(Event evt: this.training[time].samples){
+				j=0;
+				for(int oc: evt.occurrences){
+					vect[i][j+time*this.num_va]=oc;
+					j++;
+				}
+				i++;
+			}	
+		}
 		return vect;
 	}
 }

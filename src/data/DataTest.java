@@ -9,8 +9,8 @@ import java.io.*;
 
 public class DataTest implements Data{
 	protected TimeSample testing = new TimeSample();
-	protected int num_va=0;
-	protected int size=0;
+	public int num_va=0;
+	public int size=0;
 	
 	public DataTest(String url) throws IOException {
 		
@@ -42,13 +42,12 @@ public class DataTest implements Data{
 	}
 	
 	public int[][] get(){
+		int i=0;
 		int[][] vect=new int[this.size][this.num_va];
-		for(int i=0;i<this.size;i++){
-			for(int j=0;j<this.num_va;j++){
-				vect[i][j]=this.testing.samples.get(i).occurrences[j];
-			}
+		for (Event evt : this.testing.samples) {
+			vect[i]=evt.occurrences;
+			i++;
 		}
-		
 		return vect;
 	}
 }
