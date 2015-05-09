@@ -1,6 +1,7 @@
 package bayes;
 
 import java.util.ArrayList;
+
 import dag.AdjacencyList;
 
 public class BayesTransitionGraph extends AdjacencyList{

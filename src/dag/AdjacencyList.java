@@ -1,6 +1,7 @@
 package dag;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Stack;
 
 public class AdjacencyList implements Graph{
@@ -45,7 +46,7 @@ public class AdjacencyList implements Graph{
 	@Override
 	public void reverse(int ori, int dest) {
 		// TODO Auto-generated method stub
-		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest){
+		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest && originlist[ori].contains(dest)){
 			originlist[ori].remove(dest);
 			if(reachable(ori)[dest]==0)
 				originlist[dest].add(ori);
@@ -109,6 +110,28 @@ public class AdjacencyList implements Graph{
 			}
 		}	
 		return visited;
+	}
+
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = 1;
+		result = prime * result + Arrays.hashCode(originlist);
+		return result;
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (obj == null)
+			return false;
+		if (getClass() != obj.getClass())
+			return false;
+		AdjacencyList other = (AdjacencyList) obj;
+		if (!Arrays.equals(originlist, other.originlist))
+			return false;
+		return true;
 	}
 	
 }

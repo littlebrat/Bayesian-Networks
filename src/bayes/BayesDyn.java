@@ -1,5 +1,9 @@
 package bayes;
 
+import data.Data;
+import data.DataTest;
+import data.DataTrain;
+
 public class BayesDyn implements BayesianNetwork{
 	protected BayesTransitionGraph mynet;
 	protected Score scr;
@@ -19,16 +23,14 @@ public class BayesDyn implements BayesianNetwork{
 	public String toString() {
 		String r = new String();
 		r="Network: \n"+mynet.toString();
-		r=r+"\n" +"Score: "+ scr.toString();
+		r=r+"\n" +"Score: "+ scr.getScore(mynet);
 		return r;
 	}
 	
 	private BayesTransitionGraph bestAdd(){
-		//Nao faz muito sentido criares copias do bayesnet, era melhor copias do grafo?
 		BayesTransitionGraph intra = mynet;
 		BayesTransitionGraph inter = mynet;
 		BayesTransitionGraph best = mynet;
-		
 		for (int i = 0; i < nvars; i++) {
 			intra=mynet;
 			for (int j = 0; j < nvars; j++) {
@@ -51,7 +53,6 @@ public class BayesDyn implements BayesianNetwork{
 	}
 	
 	public BayesTransitionGraph bestRemove(){
-		//Nao faz muito sentido criares copias do bayesnet, era melhor copias do grafo?
 		BayesTransitionGraph intra = mynet;
 		BayesTransitionGraph inter = mynet;
 		BayesTransitionGraph best = mynet;
@@ -78,15 +79,16 @@ public class BayesDyn implements BayesianNetwork{
 	}
 	
 	private BayesTransitionGraph bestReverse(){
-		//Nao faz muito sentido criares copias do bayesnet, era melhor copias do grafo?
 		BayesTransitionGraph intra = mynet;
 		BayesTransitionGraph best = mynet;
 		
 		for (int i = 0; i < nvars; i++) {
 			intra=mynet;
 			for (int j = 0; j < nvars; j++) {
-				intra.add(i,j);
-				if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+				if(i!=j){
+					intra.reverse(i,j);
+					if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+				}
 			}
 		}
 		return best;
@@ -94,22 +96,37 @@ public class BayesDyn implements BayesianNetwork{
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
-		/*Graph res = grp;
-		Graph aux = res;
-		Graph neighbour;
-		//precisamos de ver se a aresta foi mesmo adicionada, caso contrario, nao e necessario calcular o score
-		while(score(aux)<score(neighbour)){
-			if(score(res))
-		}
-		*/
+		BayesTransitionGraph[] neighbours = new BayesTransitionGraph[3];
+		double bestscore=Double.NEGATIVE_INFINITY;
+		BayesTransitionGraph best=mynet;
+		BayesTransitionGraph previous;
+		boolean flag=true;
+		do{
+			previous = best;
+			neighbours[0] = bestAdd();
+			neighbours[1] = bestRemove();
+			neighbours[2] = bestReverse();
+			for (BayesTransitionGraph grp : neighbours) {
+				if(scr.getScore(grp)>bestscore) best=grp;
+			}
+			if(scr.getScore(best)>scr.getScore(previous)) flag=true;
+			else flag=false;
+		}while(flag);
+		mynet=best;
 	}
 	
-	public static void main(String[] args){
-		//BayesianNetwork lol = new BayesDyn(data,"MDL");
-		String principal = new String("Hello!");
-		String aux = principal;
-		aux=aux+"e";
-		System.out.println(principal);
-		System.out.println(aux);
+	public static void main(String[] args) throws Exception{
+		Data mydata = new DataTrain(args[0]);
+		Data mytest = new DataTest(args[1]);
+		int[][] learn = mydata.get();
+		int[][] test = mytest.get();
+		BayesDyn net = new BayesDyn(learn,test,"LL");
+		
+		System.out.println(net.scr.getScore((net.mynet)));
+		net.greedyHill();
+		
+		
+		System.out.println(net.scr.getScore((net.mynet)));
+		
 	}
 }
