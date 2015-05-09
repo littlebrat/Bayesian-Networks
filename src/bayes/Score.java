@@ -26,14 +26,15 @@ public abstract class Score {
 	
 	protected double getLL(BayesTransitionGraph grp){
 		double res = 0;
-		int n,nj;
+		double n,nj;
 		for (Counts count : varcounts) {
 			if(count.myparents.length>0){
 				for (int j = 0; j < count.getq(); j++) {
 					nj=count.getNij(j);
 					for (int k = 0; k < cfg.ri(count.me); k++) {
 						n=count.getNijk(j,k);
-						res+=n*Math.log(n/nj);
+						if(n==0) res=res;
+						else res+=n*Math.log(n/nj);
 					}
 				}
 			}
@@ -41,7 +42,8 @@ public abstract class Score {
 				nj=count.getNij(0);
 				for (int k = 0; k < cfg.ri(count.me); k++) {
 					n=count.getNijk(0,k);
-					res+=n*Math.log(n/nj);
+					if(n==0) res=res;
+					else res+=n*Math.log(n/nj);
 				}
 			}
 		}
@@ -67,7 +69,7 @@ public abstract class Score {
 				for (int entrada = 0; entrada < temp.length; entrada++) {
 					ocorrencia[entrada]=learning[i][temp[entrada]];
 				}
-				count.addcount(count.me,ocorrencia);
+				count.addcount(learning[i][count.me],ocorrencia);
 			}
 		}
 	}

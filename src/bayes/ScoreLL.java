@@ -21,6 +21,4 @@ public class ScoreLL extends Score{
 		return res;
 	}
 	
-	
-	
 }

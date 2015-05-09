@@ -29,5 +29,4 @@ public class ScoreMDL extends Score{
 		return res;
 	}
 	
-	
 }

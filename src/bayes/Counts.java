@@ -58,6 +58,7 @@ public class Counts {
 			}
 			localcfg[0]=(temp-localcfg[1])/(cfgs.ri(myparents[1]));
 		}
+		System.out.println("WARNING MY BROTHA ESTE METODO NAO FUNCIONA!");
 		return localcfg;
 	}
 	
@@ -95,47 +96,6 @@ public class Counts {
 			s=s+'\n';
 		}
 		return s;
-	}
-	
-	public static void main(String args[]){
-		int[][] tabela = {{0,3,2,0},{1,4,1,0},{0,2,2,0},{1,1,1,0}};
-		Configurations cfgs = new Configurations(tabela);
-		BayesTransitionGraph grp = new BayesTransitionGraph(4);
-		grp.add(0,1);
-		
-		
-		Counts[] con = new Counts[4];
-		for (int i = 0; i < con.length; i++) {
-			con[i]= new Counts(i,grp.getParents(i),cfgs);
-		}
-		con[0].addcount(0,new int[0]);
-		con[0].addcount(1,new int[0]);
-		con[0].addcount(0,new int[0]);
-		con[0].addcount(1,new int[0]);
-		
-		con[1].addcount(3,new int[0]);
-		con[1].addcount(4,new int[0]);
-		con[1].addcount(2,new int[0]);
-		con[1].addcount(1,new int[0]);
-		
-		con[2].addcount(2,new int[0]);
-		con[2].addcount(1,new int[0]);
-		con[2].addcount(2,new int[0]);
-		con[2].addcount(1,new int[0]);
-		
-		int[] caso_a = {2}; 
-		int[] caso_b = {1}; 
-		int[] caso_c = {2};
-		int[] caso_d = {1};
-		con[3].addcount(0,caso_a);
-		con[3].addcount(0,caso_b);
-		con[3].addcount(0,caso_c);
-		con[3].addcount(0,caso_d);
-		
-		for (Counts counts : con) {
-			System.out.println(counts);
-		}
-		System.out.println(con[3].getLocal(0)[0]);
 	}
 	
 }

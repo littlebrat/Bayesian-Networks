@@ -1,25 +1,19 @@
 package bayes;
 
-import java.io.IOException;
-import java.util.Arrays;
-import dag.AdjacencyList;
-import dag.Graph;
-
 public class BayesDyn implements BayesianNetwork{
 	protected BayesTransitionGraph mynet;
 	protected Score scr;
 	private int nvars;
 	
-	public BayesDyn(Data d,String s){
-		int [][] learning = d.getTraining();
-		int [][] testing = d.getTesting();
+	public BayesDyn(int[][] learning,int[][] testing,String s) throws Exception{
+		
 		Configurations cfgs = new Configurations(learning);
 		nvars=learning[0].length/2;
 		mynet = new BayesTransitionGraph(learning[0].length);
 		
 		if(s.equals("MDL"))	scr = new ScoreMDL(cfgs,learning,testing);
 		else if(s.equals("LL")) scr = new ScoreLL(cfgs,learning,testing);
-		else throw new IOException("The chosen type of score is neither of the availables scores.");
+		else throw new Exception("The chosen type of score is neither of the availables scores.");
 	}
 
 	public String toString() {
