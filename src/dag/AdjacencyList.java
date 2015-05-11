@@ -133,5 +133,17 @@ public class AdjacencyList implements Graph{
 			return false;
 		return true;
 	}
+
+	@Override
+	public AdjacencyList clone(){
+		// TODO Auto-generated method stub
+		AdjacencyList nova = new AdjacencyList(originlist.length);
+		for (Origin origin : originlist) {
+			for (int i = 0; i < originlist.length; i++) {
+				if(origin.contains(i)) nova.add(origin.getValue(),i);
+			}
+		}
+		return nova;
+	}
 	
 }
