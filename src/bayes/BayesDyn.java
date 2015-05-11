@@ -31,6 +31,7 @@ public class BayesDyn implements BayesianNetwork{
 		BayesTransitionGraph intra = mynet;
 		BayesTransitionGraph inter = mynet;
 		BayesTransitionGraph best = mynet;
+
 		for (int i = 0; i < nvars; i++) {
 			intra=mynet;
 			for (int j = 0; j < nvars; j++) {
@@ -120,13 +121,9 @@ public class BayesDyn implements BayesianNetwork{
 		Data mytest = new DataTest(args[1]);
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
-		BayesDyn net = new BayesDyn(learn,test,"LL");
+		BayesDyn net = new BayesDyn(learn,test,"MDL");
 		
 		System.out.println(net.scr.getScore((net.mynet)));
-		net.greedyHill();
-		
-		
-		System.out.println(net.scr.getScore((net.mynet)));
-		
+		//net.greedyHill();
 	}
 }

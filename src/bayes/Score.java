@@ -34,7 +34,7 @@ public abstract class Score {
 					for (int k = 0; k < cfg.ri(count.me); k++) {
 						n=count.getNijk(j,k);
 						if(n==0) res=res;
-						else res+=n*Math.log(n/nj);
+						else res+=n*Math.log(n/nj)/Math.log(2);
 					}
 				}
 			}
@@ -43,7 +43,7 @@ public abstract class Score {
 				for (int k = 0; k < cfg.ri(count.me); k++) {
 					n=count.getNijk(0,k);
 					if(n==0) res=res;
-					else res+=n*Math.log(n/nj);
+					else res+=n*Math.log(n/nj)/Math.log(2);
 				}
 			}
 		}
