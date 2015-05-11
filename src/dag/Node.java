@@ -7,7 +7,7 @@ public class Node {
 		val=n;
 	}
 	
-	protected int getValue(){
+	public int getValue(){
 		return val;
 	}
 

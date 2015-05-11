@@ -28,7 +28,7 @@ public class Origin extends Node{
 		return false;
 	}
 	
-	protected boolean contains(int node){
+	public boolean contains(int node){
 		return destlist.contains(new Destination(node));
 	}
 	

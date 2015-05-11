@@ -28,23 +28,26 @@ public class BayesDyn implements BayesianNetwork{
 	}
 	
 	private BayesTransitionGraph bestAdd(){
-		BayesTransitionGraph intra = mynet;
-		BayesTransitionGraph inter = mynet;
-		BayesTransitionGraph best = mynet;
-
+		BayesTransitionGraph intra;
+		BayesTransitionGraph inter;
+		BayesTransitionGraph best = mynet.clone();
 		for (int i = 0; i < nvars; i++) {
-			intra=mynet;
 			for (int j = 0; j < nvars; j++) {
-				intra.add(i,j);
-				if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+				if(i!=j){
+					intra=mynet.clone();
+					intra.add(i,j);
+//					System.out.println(scr.getScore(intra)+" "+i+" "+j);//para debug apagar depois
+					if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+				}
 			}
 		}
 		intra=best;
-		best=mynet;
+		best=mynet.clone();
 		for (int i = 0; i < nvars; i++) {
-			inter=mynet;
 			for (int j = 0; j < nvars; j++) {
+				inter=mynet.clone();
 				inter.addInter(i,j);
+//				System.out.println(scr.getScore(inter)+" "+i+" "+j);//para debug apagar depois
 				if(scr.getScore(inter)>scr.getScore(best)) best=inter;
 			}
 		}
@@ -54,52 +57,60 @@ public class BayesDyn implements BayesianNetwork{
 	}
 	
 	public BayesTransitionGraph bestRemove(){
-		BayesTransitionGraph intra = mynet;
-		BayesTransitionGraph inter = mynet;
-		BayesTransitionGraph best = mynet;
-		
-		for (int i = 0; i < nvars; i++) {
-			intra=mynet;
-			for (int j = 0; j < nvars; j++) {
-				intra.remove(i,j);
-				if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+		if(!mynet.isEmpty()){
+			BayesTransitionGraph intra;
+			BayesTransitionGraph inter;
+			BayesTransitionGraph best = mynet.clone();
+			for (int i = 0; i < nvars; i++) {
+				for (int j = 0; j < nvars; j++) {
+					if(i!=j){
+						intra=mynet.clone();
+						intra.remove(i,j);
+//						System.out.println(scr.getScore(intra)+" "+i+" "+j);//para debug apagar depois
+						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+					}
+				}
 			}
-		}
-		intra=best;
-		best=mynet;
-		for (int i = 0; i < nvars; i++) {
-			inter=mynet;
-			for (int j = 0; j < nvars; j++) {
-				inter.removeInter(i,j);
-				if(scr.getScore(inter)>scr.getScore(best)) best=inter;
+			intra=best;
+			best=mynet.clone();
+			for (int i = 0; i < nvars; i++) {
+				for (int j = 0; j < nvars; j++) {
+					inter=mynet.clone();
+					inter.removeInter(i,j);
+//					System.out.println(scr.getScore(inter)+" "+i+" "+j);//para debug apagar depois
+					if(scr.getScore(inter)>scr.getScore(best)) best=inter;
+				}
 			}
+			inter=best;
+			if(scr.getScore(inter)>scr.getScore(intra)) return inter;
+			else return intra;
 		}
-		inter=best;
-		if(scr.getScore(inter)>scr.getScore(intra)) return inter;
-		else return intra;
+		return mynet;
 	}
 	
 	private BayesTransitionGraph bestReverse(){
-		BayesTransitionGraph intra = mynet;
-		BayesTransitionGraph best = mynet;
-		
-		for (int i = 0; i < nvars; i++) {
-			intra=mynet;
-			for (int j = 0; j < nvars; j++) {
-				if(i!=j){
-					intra.reverse(i,j);
-					if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+		if(!mynet.isEmpty()){
+			BayesTransitionGraph intra;
+			BayesTransitionGraph best = mynet.clone();
+			for (int i = 0; i < nvars; i++) {
+				for (int j = 0; j < nvars; j++) {
+					if(i!=j){
+						intra= mynet.clone();
+						intra.reverse(i,j);
+						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+					}
 				}
 			}
+			return best;
 		}
-		return best;
+		return mynet;
 	}
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
 		BayesTransitionGraph[] neighbours = new BayesTransitionGraph[3];
-		double bestscore=Double.NEGATIVE_INFINITY;
-		BayesTransitionGraph best=mynet;
+		double bestscore=scr.getScore(mynet);
+		BayesTransitionGraph best=mynet.clone();
 		BayesTransitionGraph previous;
 		boolean flag=true;
 		do{
@@ -108,9 +119,13 @@ public class BayesDyn implements BayesianNetwork{
 			neighbours[1] = bestRemove();
 			neighbours[2] = bestReverse();
 			for (BayesTransitionGraph grp : neighbours) {
-				if(scr.getScore(grp)>bestscore) best=grp;
+				if(scr.getScore(grp)>bestscore) 
+				{
+					best=grp;
+					bestscore=scr.getScore(grp);
+				}
 			}
-			if(scr.getScore(best)>scr.getScore(previous)) flag=true;
+			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
 			else flag=false;
 		}while(flag);
 		mynet=best;
@@ -122,8 +137,8 @@ public class BayesDyn implements BayesianNetwork{
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
 		BayesDyn net = new BayesDyn(learn,test,"MDL");
+		net.greedyHill();
+		System.out.println(net);
 		
-		System.out.println(net.scr.getScore((net.mynet)));
-		//net.greedyHill();
 	}
 }

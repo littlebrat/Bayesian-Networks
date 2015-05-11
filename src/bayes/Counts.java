@@ -36,7 +36,6 @@ public class Counts {
 	}
 	
 	int getGlobal(int[] localcfg){
-		//isto de certeza que esta mal porque os indices comecam em 1
 		int j=localcfg[0];
 		for (int l = 1; l < myparents.length; l++) {
 			j=j*cfgs.ri(myparents[l])+localcfg[l];
@@ -45,7 +44,7 @@ public class Counts {
 	}
 	
 	int[] getLocal(int global){
-		//isto de certeza que esta mal porque os indices comecam em 1
+		//corrigido, mas nao sei se ja funciona!
 		int[] localcfg=new int[myparents.length];
 		if(myparents.length==1){
 			localcfg[0]=global;
@@ -56,9 +55,8 @@ public class Counts {
 				localcfg[l]=temp % cfgs.ri(myparents[l]);
 				temp=(temp-localcfg[l])/(cfgs.ri(myparents[l]));
 			}
-			localcfg[0]=(temp-localcfg[1])/(cfgs.ri(myparents[1]));
+			localcfg[0]=temp;
 		}
-		System.out.println("WARNING MY BROTHA ESTE METODO NAO FUNCIONA!");
 		return localcfg;
 	}
 	

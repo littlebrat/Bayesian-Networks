@@ -24,4 +24,6 @@ public interface Graph {
 	
 	public int hashCode();
 	
+	public Graph clone();
+	
 }

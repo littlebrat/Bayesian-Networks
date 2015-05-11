@@ -3,6 +3,7 @@ package bayes;
 import java.util.ArrayList;
 
 import dag.AdjacencyList;
+import dag.Origin;
 
 public class BayesTransitionGraph extends AdjacencyList{
 	private static int maxparents=3;
@@ -69,5 +70,45 @@ public class BayesTransitionGraph extends AdjacencyList{
 		}
 		return res;
 	}
+	
+	@Override
+	public boolean isEmpty() {
+		// TODO Auto-generated method stub
+		return super.isEmpty();
+	}
+	
+	@Override
+	public int hashCode() {
+		final int prime = 31;
+		int result = super.hashCode();
+		result = prime * result + nvars;
+		return result;
+	}
 
+	@Override
+	public boolean equals(Object obj) {
+		if (this == obj)
+			return true;
+		if (!super.equals(obj))
+			return false;
+		if (!(obj instanceof BayesTransitionGraph))
+			return false;
+		BayesTransitionGraph other = (BayesTransitionGraph) obj;
+		if (nvars != other.nvars)
+			return false;
+		return true;
+	}
+
+	@Override
+	public BayesTransitionGraph clone() {
+		// TODO Auto-generated method stub
+		BayesTransitionGraph cln = new BayesTransitionGraph(this.size());
+		for (Origin origin : originlist) {
+			for (int i = 0; i < originlist.length; i++) {
+				if(origin.contains(i)) cln.add(origin.getValue(),i);
+			}
+		}
+		return cln;// o clone nao esta a funcionar
+	}
+	
 }
