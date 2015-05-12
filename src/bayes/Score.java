@@ -4,6 +4,7 @@ import java.util.ArrayList;
 //tem cuidado com os tipos de dados se e int/double
 public abstract class Score {
 	protected Counts[] varcounts;
+	protected Estimates[] ests;
 	protected static double pseudo = 0.5;
 	protected Configurations cfg;
 	protected int[][] learning;
@@ -75,4 +76,25 @@ public abstract class Score {
 	}
 	
 	public abstract double getScore(BayesTransitionGraph grp);
+	
+	protected double getParameter(int i, int j, int k){
+		double res;
+		double nk=varcounts[i].getNijk(j, k);
+		double nj=varcounts[i].getNij(j);
+		res=(nk+pseudo)/(nj+cfg.ri(i)*pseudo);
+		return res;
+	}
+	
+	protected void makeEstimates(){
+		ests=new Estimates[varcounts.length];
+		for (int i = 0; i < varcounts.length; i++) {
+			ests[i]=new Estimates(cfg.ri(i),varcounts[i].getLengthJ());
+			for (int j = 0; j < varcounts[i].getLengthJ(); j++) {
+				for (int k = 0; k < cfg.ri(i); k++) {
+					ests[i].setParam(getParameter(i,j,k),j,k);
+				}
+			}
+		}
+	}
+	
 }

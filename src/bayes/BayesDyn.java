@@ -104,6 +104,7 @@ public class BayesDyn implements BayesianNetwork{
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
+		double timetobuild = System.currentTimeMillis();
 		BayesTransitionGraph[] neighbours = new BayesTransitionGraph[3];
 		double bestscore=scr.getScore(mynet);
 		BayesTransitionGraph best=mynet.clone();
@@ -124,6 +125,10 @@ public class BayesDyn implements BayesianNetwork{
 			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
 			else flag=false;
 		}while(flag);
+		timetobuild = System.currentTimeMillis()-timetobuild;
+		scr.makeEstimates();
+		System.out.println(timetobuild/1000);
+		
 	}
 	
 	public static void main(String[] args) throws Exception{

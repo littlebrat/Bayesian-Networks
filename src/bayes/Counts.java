@@ -83,6 +83,10 @@ public class Counts {
 		else return countTable[k][0];
 	}
 	
+	int getLengthJ(){
+		return countTable[0].length;
+	}
+	
 	@Override
 	public String toString() {
 		// TODO Auto-generated method stub
