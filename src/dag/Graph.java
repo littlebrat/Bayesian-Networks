@@ -26,4 +26,6 @@ public interface Graph {
 	
 	public Graph clone();
 	
+	public boolean contains(int ori,int dest);
+	
 }

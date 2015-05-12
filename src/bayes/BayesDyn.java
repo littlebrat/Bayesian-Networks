@@ -36,7 +36,6 @@ public class BayesDyn implements BayesianNetwork{
 				if(i!=j){
 					intra=mynet.clone();
 					intra.add(i,j);
-//					System.out.println(scr.getScore(intra)+" "+i+" "+j);//para debug apagar depois
 					if(scr.getScore(intra)>scr.getScore(best)) best=intra;
 				}
 			}
@@ -47,7 +46,6 @@ public class BayesDyn implements BayesianNetwork{
 			for (int j = 0; j < nvars; j++) {
 				inter=mynet.clone();
 				inter.addInter(i,j);
-//				System.out.println(scr.getScore(inter)+" "+i+" "+j);//para debug apagar depois
 				if(scr.getScore(inter)>scr.getScore(best)) best=inter;
 			}
 		}
@@ -66,7 +64,6 @@ public class BayesDyn implements BayesianNetwork{
 					if(i!=j){
 						intra=mynet.clone();
 						intra.remove(i,j);
-//						System.out.println(scr.getScore(intra)+" "+i+" "+j);//para debug apagar depois
 						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
 					}
 				}
@@ -77,7 +74,6 @@ public class BayesDyn implements BayesianNetwork{
 				for (int j = 0; j < nvars; j++) {
 					inter=mynet.clone();
 					inter.removeInter(i,j);
-//					System.out.println(scr.getScore(inter)+" "+i+" "+j);//para debug apagar depois
 					if(scr.getScore(inter)>scr.getScore(best)) best=inter;
 				}
 			}
@@ -128,7 +124,6 @@ public class BayesDyn implements BayesianNetwork{
 			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
 			else flag=false;
 		}while(flag);
-		mynet=best;
 	}
 	
 	public static void main(String[] args) throws Exception{
@@ -136,9 +131,9 @@ public class BayesDyn implements BayesianNetwork{
 		Data mytest = new DataTest(args[1]);
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
-		BayesDyn net = new BayesDyn(learn,test,"MDL");
-		net.greedyHill();
-		System.out.println(net);
+		BayesDyn mamen = new BayesDyn(learn,test,"MDL");
+		mamen.greedyHill();
+		System.out.println(mamen);
 		
 	}
 }

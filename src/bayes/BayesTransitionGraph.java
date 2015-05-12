@@ -3,7 +3,7 @@ package bayes;
 import java.util.ArrayList;
 
 import dag.AdjacencyList;
-import dag.Origin;
+
 
 public class BayesTransitionGraph extends AdjacencyList{
 	private static int maxparents=3;
@@ -47,6 +47,21 @@ public class BayesTransitionGraph extends AdjacencyList{
 			super.remove(ori,dest+nvars);
 	}
 
+	@Override
+	public boolean contains(int ori, int dest) {
+		// TODO Auto-generated method stub
+		if(dest < nvars && ori < nvars)
+			return super.contains(ori+nvars, dest+nvars);
+		else return false;
+	}
+	
+	
+	public boolean containsInter(int ori, int dest) {
+		if(dest < nvars && ori < nvars)
+			return super.contains(ori, dest+nvars);
+		else return false;
+	}
+	
 	@Override
 	public void reverse(int ori, int dest) {
 		// TODO Auto-generated method stub
@@ -103,12 +118,16 @@ public class BayesTransitionGraph extends AdjacencyList{
 	public BayesTransitionGraph clone() {
 		// TODO Auto-generated method stub
 		BayesTransitionGraph cln = new BayesTransitionGraph(this.size());
-		for (Origin origin : originlist) {
-			for (int i = 0; i < originlist.length; i++) {
-				if(origin.contains(i)) cln.add(origin.getValue(),i);
+		for (int i = 0; i < nvars; i++) {
+			for (int j = 0; j < nvars; j++) {
+				if(contains(i,j)){
+					cln.add(i,j);
+				}
+				if(containsInter(i,j)){
+					cln.addInter(i,j);
+				}
 			}
 		}
-		return cln;// o clone nao esta a funcionar
+		return cln;
 	}
-	
 }

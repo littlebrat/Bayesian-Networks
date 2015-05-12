@@ -145,5 +145,12 @@ public class AdjacencyList implements Graph{
 		}
 		return nova;
 	}
+
+	@Override
+	public boolean contains(int ori,int dest) {
+		return originlist[ori].contains(dest);
+	}
+	
+	
 	
 }
