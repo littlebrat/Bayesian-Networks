@@ -126,9 +126,8 @@ public class BayesDyn implements BayesianNetwork{
 			else flag=false;
 		}while(flag);
 		timetobuild = System.currentTimeMillis()-timetobuild;
+		System.out.println(timetobuild/1000+" seconds");
 		scr.makeEstimates();
-		System.out.println(timetobuild/1000);
-		
 	}
 	
 	public static void main(String[] args) throws Exception{
@@ -136,7 +135,7 @@ public class BayesDyn implements BayesianNetwork{
 		Data mytest = new DataTest(args[1]);
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
-		BayesDyn mamen = new BayesDyn(learn,test,"MDL");
+		BayesDyn mamen = new BayesDyn(learn,test,"LL");
 		mamen.greedyHill();
 		System.out.println(mamen);
 		

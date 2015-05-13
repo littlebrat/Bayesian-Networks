@@ -65,7 +65,7 @@ public class BayesTransitionGraph extends AdjacencyList{
 	@Override
 	public void reverse(int ori, int dest) {
 		// TODO Auto-generated method stub
-		if(this.getDests(ori+nvars).size()<maxparents && dest < nvars && ori < nvars)
+		if(this.getOrigins(ori+nvars).size()<maxparents && dest < nvars && ori < nvars)
 			super.reverse(ori+nvars,dest+nvars);
 	}
 	
