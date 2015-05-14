@@ -2,12 +2,12 @@ package dag;
 
 import java.util.ArrayList;
 
-public class Origin extends Node{
+public class Origin<T> extends Node<T>{
 	
-	protected ArrayList<Destination> destlist = new ArrayList<Destination>();
+	protected ArrayList<Destination<T>> destlist = new ArrayList<Destination<T>>();
 	
-	protected Origin(int n) {
-		super(n);
+	protected Origin(T element) {
+		super(element);
 		// TODO Auto-generated constructor stub
 	}
 	
@@ -15,9 +15,9 @@ public class Origin extends Node{
 		return destlist.size();
 	}
 	
-	protected ArrayList<Integer> getDests(){
-		ArrayList<Integer> res = new ArrayList<Integer>();
-		for (Destination dest : destlist) {
+	protected ArrayList<T> getDests(){
+		ArrayList<T> res = new ArrayList<T>();
+		for (Destination<T> dest : destlist) {
 			res.add(dest.getValue());
 		}
 		return res;
@@ -28,47 +28,19 @@ public class Origin extends Node{
 		return false;
 	}
 	
-	public boolean contains(int node){
-		return destlist.contains(new Destination(node));
+	protected boolean contains(T node){
+		return destlist.contains(new Destination<T>(node));
 	}
 	
-	protected void add(int node) {
+	protected void add(T node) {
 		// TODO Auto-generated method stub
 		if(!contains(node))
-			destlist.add(new Destination(node));
+			destlist.add(new Destination<T>(node));
 	}
 	
-	protected void remove(int node) {
+	protected void remove(T node) {
 		// TODO Auto-generated method stub
-		destlist.remove(new Destination(node));
+		destlist.remove(new Destination<T>(node));
 	}
-
-	@Override
-	public int hashCode() {
-		final int prime = 31;
-		int result = super.hashCode();
-		result = prime * result
-				+ ((destlist == null) ? 0 : destlist.hashCode());
-		return result;
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		if (this == obj)
-			return true;
-		if (!super.equals(obj))
-			return false;
-		if (getClass() != obj.getClass())
-			return false;
-		Origin other = (Origin) obj;
-		if (destlist == null) {
-			if (other.destlist != null)
-				return false;
-		} else if (!destlist.equals(other.destlist))
-			return false;
-		return true;
-	}
-	
-	
 	
 }

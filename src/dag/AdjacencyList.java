@@ -6,23 +6,22 @@ import java.util.Stack;
 
 public class AdjacencyList implements Graph{
 	
-	protected Origin originlist[];
+	protected Origin<Integer>[] originlist;
 	
 	public AdjacencyList(int dim){
-		originlist = new Origin[dim];
+		originlist = (Origin<Integer>[]) new Origin[dim];
 		for (int i = 0; i < originlist.length; i++) {
-			originlist[i]=new Origin(i);
+			originlist[i]=new Origin<Integer>(i);
 		}
 	}
 	
 	@Override
 	public void add(int ori, int dest) {
 		// TODO Auto-generated method stub
-		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest){
+		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest)
 			if(reachable(dest)[ori]==0){
 				originlist[ori].add(dest);
 			}
-		}
 	}
 
 	@Override
@@ -35,7 +34,7 @@ public class AdjacencyList implements Graph{
 	@Override
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
-		for (Origin origin : originlist) {
+		for (Origin<Integer> origin : originlist) {
 			if(origin.size()!=0){
 				return false;
 			}
@@ -46,7 +45,7 @@ public class AdjacencyList implements Graph{
 	@Override
 	public void reverse(int ori, int dest) {
 		// TODO Auto-generated method stub
-		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest && originlist[ori].contains(dest)){
+		if(ori>=0 && ori<size() && dest>=0 && dest<size() && ori!=dest && originlist[ori].contains(dest)==true){
 			originlist[ori].remove(dest);
 			if(reachable(ori)[dest]==0)
 				originlist[dest].add(ori);
@@ -81,7 +80,7 @@ public class AdjacencyList implements Graph{
 	public ArrayList<Integer> getOrigins(int x) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> ori = new ArrayList<Integer>();
-		for (Origin origin : originlist) {
+		for (Origin<Integer> origin : originlist) {
 			if(origin.contains(x))
 				ori.add(origin.getValue());
 		}
@@ -133,24 +132,6 @@ public class AdjacencyList implements Graph{
 			return false;
 		return true;
 	}
-
-	@Override
-	public AdjacencyList clone(){
-		// TODO Auto-generated method stub
-		AdjacencyList nova = new AdjacencyList(originlist.length);
-		for (Origin origin : originlist) {
-			for (int i = 0; i < originlist.length; i++) {
-				if(origin.contains(i)) nova.add(origin.getValue(),i);
-			}
-		}
-		return nova;
-	}
-
-	@Override
-	public boolean contains(int ori,int dest) {
-		return originlist[ori].contains(dest);
-	}
-	
 	
 	
 }

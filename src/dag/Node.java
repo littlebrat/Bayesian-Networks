@@ -1,13 +1,13 @@
 package dag;
 
-public class Node {
-	private int val;
+public class Node<T> {
+	private T val;
 	
-	protected Node(int n){
-		val=n;
+	protected Node(T element){
+		val=element;
 	}
 	
-	public int getValue(){
+	protected T getValue(){
 		return val;
 	}
 
@@ -15,7 +15,7 @@ public class Node {
 	public int hashCode() {
 		final int prime = 31;
 		int result = 1;
-		result = prime * result + val;
+		result = prime * result + ((val == null) ? 0 : val.hashCode());
 		return result;
 	}
 
@@ -27,10 +27,17 @@ public class Node {
 			return false;
 		if (getClass() != obj.getClass())
 			return false;
-		Node other = (Node) obj;
-		if (val != other.val)
+		Node<T> other = (Node<T>) obj;
+		if (val == null) {
+			if (other.val != null)
+				return false;
+		} else if (!val.equals(other.val))
 			return false;
 		return true;
 	}
+
+	
+
+	
 	
 }
