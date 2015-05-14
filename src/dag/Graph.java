@@ -20,4 +20,12 @@ public interface Graph {
 	
 	public int size();
 	
+	public boolean equals(Object obj);
+	
+	public int hashCode();
+	
+	public Graph clone();
+	
+	public boolean contains(int ori,int dest);
+	
 }
