@@ -88,7 +88,7 @@ public abstract class Score {
 	protected void makeEstimates(){
 		ests=new Estimates[varcounts.length];
 		for (int i = 0; i < varcounts.length; i++) {
-			ests[i]=new Estimates(cfg.ri(i),varcounts[i].getLengthJ());
+			ests[i]=new Estimates(cfg.ri(i),varcounts[i].getLengthJ(),varcounts[i].myparents,varcounts[i].cfgs);
 			for (int j = 0; j < varcounts[i].getLengthJ(); j++) {
 				for (int k = 0; k < cfg.ri(i); k++) {
 					ests[i].setParam(getParameter(i,j,k),j,k);
@@ -97,4 +97,15 @@ public abstract class Score {
 		}
 	}
 	
+	private double eventEstimate(int i,int[] occur,int k){
+		return ests[i].getParam(occur, k);
+	}
+	
+	private double eventProbability(int i){
+		double res=1;
+		for (int j = ests.length/2; j < ests.length; j++) {
+			res*=ests[j].getParam(ests[j].myparents, testing[i][j]); // nao esta bem
+		}
+		return res;
+	}
 }

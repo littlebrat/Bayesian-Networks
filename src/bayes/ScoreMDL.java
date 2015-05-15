@@ -25,7 +25,7 @@ public class ScoreMDL extends Score{
 		// TODO Auto-generated method stub
 		double res=0;
 		makeCounts(grp);
-		res=getLL(grp)-0.5*Math.log(learning.length)*getB();
+		res=getLL(grp)-0.5*Math.log(learning.length)*getB()/Math.log(2);
 		return res;
 	}
 	
