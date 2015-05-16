@@ -25,10 +25,32 @@ public class BayesDyn implements BayesianNetwork{
 	}
 
 	public String toString() {
-		String r = new String();
-		r="Network: \n"+mynet.toString();
-		r=r+"\n" +"Score: "+ scr.getScore(mynet);
-		return r;
+		String s= new String();
+		s="===Inter-slice connectivity\n";
+		for(int i=nvars; i<2*nvars;i++){
+			s+="node "+names[i-nvars]+" at t+1: ";
+			for(int j=0; j<mynet.getParents(i).length;j++){
+				if(mynet.getParents(i)[j]<=nvars-1){
+					s+= names[mynet.getParents(i)[j]]+" ";
+				}
+			}
+			s+="at time-slice t\n";
+		}
+		s+="===Intra-slice connectivitiy\n";
+		for(int i=nvars; i<2*nvars;i++){
+			s+="node "+names[i-nvars]+" at t+1: ";
+			for(int j=0; j<mynet.getParents(i).length;j++){
+				if(mynet.getParents(i)[j]>=nvars){
+					s+= names[mynet.getParents(i)[j]-nvars]+" ";
+				}
+			}
+			s+="at time-slice t+1\n";
+		}
+		s+="===Scores\n";
+		//falta calcular os dois scores e por aqui
+		s+="LL score:	\n";
+		s+="MDL score: \n";
+		return s;
 	}
 	
 	public void setRestarts(int n){

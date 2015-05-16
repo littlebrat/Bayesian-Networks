@@ -7,28 +7,53 @@ public class Input {
 	private int randtest;
 	private int var;
 	
-	public Input(String[] args)
+	public Input(String[] args) throws WrongInput
 	{
-		train = args[0];
-		test = args[1];
-		score = args[2];
-		randtest = Integer.parseInt(args[3]);
-		var = Integer.parseInt(args[4]);
+		if(args.length<4 || args.length>5){
+			throw new WrongInput();
+		}else{
+			train = args[0];
+			test = args[1];			
+			score = args[2];
+			randtest = Integer.parseInt(args[3]);
+			if(args.length==4){
+				var=0;
+			}else{
+				var = Integer.parseInt(args[4]);
+			}
+		}
 	}
 	
-	public String getTrain()
+	
+	public String getTrain() throws WrongFileExtension
 	{
-		return train;
+		if(this.train.endsWith(".csv")==false || this.train.endsWith(".csv")==false ){
+			throw new WrongFileExtension();
+		}else{
+			return train;
+		}
 	}
 	
-	public String getTest()
+	public String getTest() throws WrongFileExtension
 	{
-		return test;
+		if(this.test.endsWith(".csv")==false || this.test.endsWith(".csv")==false ){
+			throw new WrongFileExtension();
+		}else{
+			return test;
+		}
 	}
 	
-	public String getScore()
+	public String getScore() throws WrongScoreType
 	{
-		return score;
+		if(score.equals("MDL")==false && score.equals("LL")==true){
+			return score;
+		}else{
+				if (score.equals("LL")==false && score.equals("MDL")==true) {
+					return score;
+				}else{
+					throw new WrongScoreType();
+				}
+		}
 	}
 	
 	public int getRandtest()
