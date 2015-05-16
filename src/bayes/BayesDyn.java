@@ -1,6 +1,8 @@
 package bayes;
 
-import data.Data;
+import java.util.Random;
+
+import data.Data;//depois apagar isto
 import data.DataTest;
 import data.DataTrain;
 
@@ -8,17 +10,18 @@ public class BayesDyn implements BayesianNetwork{
 	protected BayesTransitionGraph mynet;
 	protected Score scr;
 	private int nvars;
+	private int randomrst=0;
+	private String[] names;
 	
 	
-	public BayesDyn(int[][] learning,int[][] testing,String s) throws Exception{
+	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar){
 		
 		Configurations cfgs = new Configurations(learning);
 		nvars=learning[0].length/2;
 		mynet = new BayesTransitionGraph(learning[0].length);
-		
+		names=namevar;
 		if(s.equals("MDL"))	scr = new ScoreMDL(cfgs,learning,testing);
 		else if(s.equals("LL")) scr = new ScoreLL(cfgs,learning,testing);
-		else throw new Exception("The chosen type of score is neither of the availables scores.");
 	}
 
 	public String toString() {
@@ -26,6 +29,10 @@ public class BayesDyn implements BayesianNetwork{
 		r="Network: \n"+mynet.toString();
 		r=r+"\n" +"Score: "+ scr.getScore(mynet);
 		return r;
+	}
+	
+	public void setRestarts(int n){
+		randomrst=n;
 	}
 	
 	private BayesTransitionGraph bestAdd(){
@@ -103,8 +110,37 @@ public class BayesDyn implements BayesianNetwork{
 		return mynet;
 	}
 	
+	private BayesTransitionGraph makeRandomOP() {
+		// TODO Auto-generated method stub
+		BayesTransitionGraph grp=mynet.clone();
+		Random rd = new Random();
+		if(mynet.isEmpty()){
+			if(rd.nextInt(2)==0) grp.add(rd.nextInt(nvars),rd.nextInt(nvars));
+			else grp.addInter(rd.nextInt(nvars),rd.nextInt(nvars));
+			
+		}else{
+			int op=rd.nextInt(3);
+			switch(op){
+			 case 0:
+				 if(rd.nextInt(2)==0) grp.add(rd.nextInt(nvars),rd.nextInt(nvars));
+				 else grp.addInter(rd.nextInt(nvars),rd.nextInt(nvars));
+				 break;
+			 case 1:
+				 if(rd.nextInt(2)==0) grp.remove(rd.nextInt(nvars),rd.nextInt(nvars));
+				 else grp.addInter(rd.nextInt(nvars),rd.nextInt(nvars));
+			     break;
+			 case 2:
+				 grp.reverse(rd.nextInt(nvars), rd.nextInt(nvars));
+				 break;   
+			}
+		}
+		return grp;
+	}
+	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
+		Random rd = new Random();
+		int restarts=0;
 		BayesTransitionGraph[] neighbours = new BayesTransitionGraph[3];
 		double bestscore=Double.NEGATIVE_INFINITY;
 		BayesTransitionGraph best=mynet.clone();
@@ -123,11 +159,18 @@ public class BayesDyn implements BayesianNetwork{
 				}
 			}
 			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
+			else if(scr.getScore(best)==scr.getScore(previous) && restarts<randomrst){
+				int opsnumber = rd.nextInt(2*nvars);
+				for(int i=0; i<opsnumber;i++){
+					mynet=makeRandomOP();
+				}
+				restarts++;
+			}
 			else flag=false;
 		}while(flag);
 		scr.makeEstimates();
 	}
-	
+
 	public int[] getPredictions(int var){
 		return scr.getVarFromTests(var);
 	}
@@ -138,16 +181,17 @@ public class BayesDyn implements BayesianNetwork{
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
-		BayesDyn mamen = new BayesDyn(learn,test,"LL");
+		String[] nomesranhosos = new String[2];
+		BayesDyn mamen = new BayesDyn(learn,test,"MDL",nomesranhosos);
+		mamen.setRestarts(100);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
 		System.out.println(mamen);
-		int[] pila = mamen.getPredictions(7);
-		for (int i = 0; i < test.length; i++) {
-			System.out.println(pila[i]);
-		}
-		
+//		int[] pila = mamen.getPredictions(7);
+//		for (int i = 0; i < test.length; i++) {
+//			System.out.println(pila[i]);
+//		}
 		
 	}
 }
