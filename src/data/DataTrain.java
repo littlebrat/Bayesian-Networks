@@ -77,7 +77,7 @@ public class DataTrain implements Data{
 				+ num_va + ", size=" + size + "]";
 	}
 
-	int getcfg(int va){
+	public int getcfg(int va){
 		int rank = 0;
 		int max =0;
 		int index =0;
@@ -113,4 +113,31 @@ public class DataTrain implements Data{
 		
 		return vect;
 	}
+
+	@Override
+	public String[] getNames(String url) throws IOException {
+		String[] vanames;
+		int i=0;
+		int count=0;
+		
+		BufferedReader commaFile = new BufferedReader (new FileReader(url));
+		String dataRow = commaFile.readLine();
+		dataRow=dataRow.replace(" ", "");
+		dataRow=dataRow.replace("	", "");
+		String [] valeat = dataRow.split (",");
+		while(valeat[i].endsWith("_0")){
+			i++;
+			count ++;
+		}	
+		vanames=new String[count];
+		for(i=0; i<count;i++){
+			vanames[i]=valeat[i].replace("_0", "");
+			System.out.println(vanames[i]);
+		}
+		
+		commaFile.close ();
+		return vanames;
+	}
+	
+	
 }

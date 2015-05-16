@@ -52,4 +52,24 @@ public class DataTest implements Data{
 		}
 		return vect;
 	}
+	
+	
+	public String[] getNames(String url) throws IOException {
+		String[] vanames;
+		BufferedReader commaFile = new BufferedReader (new FileReader(url));
+		String dataRow = commaFile.readLine();
+		dataRow = commaFile.readLine();
+		dataRow=dataRow.replace(" ", "");
+		dataRow=dataRow.replace("	", "");
+		String [] valeat = dataRow.split (",");
+		vanames=new String[valeat.length];
+		for(int i=0;i<valeat.length;i++){
+			vanames[i]=valeat[i];
+		}
+		commaFile.close ();
+		
+		return vanames;
+		
+	}
+	
 }
