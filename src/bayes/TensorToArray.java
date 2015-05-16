@@ -1,5 +1,7 @@
 package bayes;
 
+import java.util.List;
+
 public abstract class TensorToArray {
 	Configurations cfgs;
 	int[] myparents;
@@ -12,17 +14,16 @@ public abstract class TensorToArray {
 		return j;
 	}
 	
-	int[] getLocal(int global){
-		//corrigido, mas nao sei se ja funciona!
-		int[] localcfg=new int[myparents.length];
-		if(myparents.length==1){
+	public static int[] getLocal(int global,List<Integer> js){
+		int[] localcfg=new int[js.size()];
+		if(js.size()==1){
 			localcfg[0]=global;
 		}
 		else{
 			int temp = global;
-			for (int l = myparents.length-1; l>=1; l--) {
-				localcfg[l]=temp % cfgs.ri(myparents[l]);
-				temp=(temp-localcfg[l])/(cfgs.ri(myparents[l]));
+			for (int l = js.size()-1; l>=1; l--) {
+				localcfg[l]=temp % js.get(l);
+				temp=(temp-localcfg[l])/js.get(l);
 			}
 			localcfg[0]=temp;
 		}

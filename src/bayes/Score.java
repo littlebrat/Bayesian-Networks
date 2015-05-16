@@ -1,6 +1,7 @@
 package bayes;
 
 import java.util.ArrayList;
+import java.util.List;
 //tem cuidado com os tipos de dados se e int/double
 public abstract class Score {
 	protected Counts[] varcounts;
@@ -97,14 +98,89 @@ public abstract class Score {
 		}
 	}
 	
-	private double eventEstimate(int i,int[] occur,int k){
+	private double getTheta(int i,int[] occur,int k){
 		return ests[i].getParam(occur, k);
 	}
 	
-	private double eventProbability(int i){
+	private int[][] getAllEvents(int[] restric){
+		int lines=1;
+		List<Integer> js = new ArrayList<Integer>();
+		for (int i = 0; i < restric.length; i++) {
+			if(restric[i]==-1){// se for igual a -1 quer dizer que é uma variavel livre
+				lines*=cfg.ri(i);
+				js.add(cfg.ri(i));
+			}
+		}
+		int[][] res = new int[lines][restric.length];
+		for (int i = 0; i < lines; i++) {
+			int[] glob=TensorToArray.getLocal(i,js);
+			for (int j=0,k=0; j < restric.length; j++) {
+				if(restric[j]!=-1){
+					res[i][j]=restric[j];
+				}
+				else{
+					res[i][j]=glob[k];
+					k++;
+				}
+			}
+		}
+		return res;
+	}
+	
+	private double lineProbability(int[] line){
 		double res=1;
-		for (int j = ests.length/2; j < ests.length; j++) {
-			res*=ests[j].getParam(ests[j].myparents, testing[i][j]); // nao esta bem
+		int[] fathers;
+		int[] jvalues;
+		for (int j = line.length/2; j < line.length; j++) {
+			fathers=ests[j].myparents;
+			jvalues= new int[fathers.length];
+			for (int i = 0; i < fathers.length; i++) {
+				jvalues[i]=line[fathers[i]];
+			}
+			res*=getTheta(j,jvalues,line[j]);
+		}
+		return res;
+	}
+	
+	private double getVarProb(int var,int k,int[] test){
+		double res=0;
+		int[] mytest = new int[2*test.length];
+		for (int i = 0; i < 2*test.length; i++) {
+			if(i<test.length){
+				mytest[i]=test[i];
+			}
+			else if(i==var){
+				mytest[i]=k;
+			}
+			else{
+				mytest[i]=-1;
+			}
+		}
+		int[][] table = getAllEvents(mytest);
+		for (int i = 0; i < table.length; i++) {
+			res+=lineProbability(table[i]);
+		}
+		return res;
+	}
+	
+	private int getVarValue(int var,int[] test){
+		int value=0;
+		double bestprob=-1;
+		double score;
+		for (int k = 0; k < cfg.ri(var); k++) {
+			score=getVarProb(var,k,test);
+			if(score>bestprob){
+				value=k;
+				bestprob=score;
+			}
+		}
+		return value;
+	}
+	
+	protected int[] getVarFromTests(int var){
+		int[] res = new int[testing.length];
+		for (int i = 0; i < testing.length; i++) {
+			res[i]=getVarValue(var,testing[i]);
 		}
 		return res;
 	}

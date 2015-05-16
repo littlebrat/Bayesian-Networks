@@ -128,6 +128,7 @@ public class BayesDyn implements BayesianNetwork{
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
 		scr.makeEstimates();
+		System.out.println(scr.getVarFromTests(5)[2]);
 	}
 	
 	public static void main(String[] args) throws Exception{
