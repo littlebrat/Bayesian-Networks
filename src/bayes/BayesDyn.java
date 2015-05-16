@@ -9,6 +9,7 @@ public class BayesDyn implements BayesianNetwork{
 	protected Score scr;
 	private int nvars;
 	
+	
 	public BayesDyn(int[][] learning,int[][] testing,String s) throws Exception{
 		
 		Configurations cfgs = new Configurations(learning);
@@ -104,9 +105,8 @@ public class BayesDyn implements BayesianNetwork{
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
-		double timetobuild = System.currentTimeMillis();
 		BayesTransitionGraph[] neighbours = new BayesTransitionGraph[3];
-		double bestscore=scr.getScore(mynet);
+		double bestscore=Double.NEGATIVE_INFINITY;
 		BayesTransitionGraph best=mynet.clone();
 		BayesTransitionGraph previous;
 		boolean flag=true;
@@ -125,10 +125,11 @@ public class BayesDyn implements BayesianNetwork{
 			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
 			else flag=false;
 		}while(flag);
-		timetobuild = System.currentTimeMillis()-timetobuild;
-		System.out.println(timetobuild/1000+" seconds");
 		scr.makeEstimates();
-		System.out.println(scr.getVarFromTests(5)[2]);
+	}
+	
+	public int[] getPredictions(int var){
+		return scr.getVarFromTests(var);
 	}
 	
 	public static void main(String[] args) throws Exception{
@@ -136,9 +137,17 @@ public class BayesDyn implements BayesianNetwork{
 		Data mytest = new DataTest(args[1]);
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
+		double timetobuild = System.currentTimeMillis();
 		BayesDyn mamen = new BayesDyn(learn,test,"LL");
 		mamen.greedyHill();
+		timetobuild = System.currentTimeMillis()-timetobuild;
+		System.out.println(timetobuild/1000+" seconds");
 		System.out.println(mamen);
+		int[] pila = mamen.getPredictions(7);
+		for (int i = 0; i < test.length; i++) {
+			System.out.println(pila[i]);
+		}
+		
 		
 	}
 }

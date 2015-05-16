@@ -15,6 +15,7 @@ public class Estimates extends TensorToArray{
 	}
 	
 	protected double getParam(int[] fathers,int k){
-		return paramTable[k][getGlobal(fathers)];
+		if(fathers.length==0) return paramTable[k][0];
+		else return paramTable[k][getGlobal(fathers)];
 	}
 }
