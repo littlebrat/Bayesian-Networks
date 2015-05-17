@@ -34,26 +34,27 @@ public class BayesDyn implements BayesianNetwork{
 		String s= new String();
 		s="===Inter-slice connectivity\n";
 		for(int i=nvars; i<2*nvars;i++){
-			s+="node "+names[i-nvars]+" at t+1: ";
+			s+=names[i-nvars]+" : ";
 			for(int j=0; j<mynet.getParents(i).length;j++){
 				if(mynet.getParents(i)[j]<=nvars-1){
-					s+= names[mynet.getParents(i)[j]]+" ";
+					s+= names[mynet.getParents(i)[j]]+",";
 				}
 			}
-			s+="at time-slice t\n";
+			s=s.substring(0,s.length()-1);
+			s+="\n";
 		}
 		s+="===Intra-slice connectivitiy\n";
 		for(int i=nvars; i<2*nvars;i++){
-			s+="node "+names[i-nvars]+" at t+1: ";
+			s+=names[i-nvars]+" : ";
 			for(int j=0; j<mynet.getParents(i).length;j++){
 				if(mynet.getParents(i)[j]>=nvars){
-					s+= names[mynet.getParents(i)[j]-nvars]+" ";
+					s+= names[mynet.getParents(i)[j]-nvars]+",";
 				}
 			}
-			s+="at time-slice t+1\n";
+			s=s.substring(0,s.length()-1);
+			s+="\n";
 		}
 		s+="===Scores\n";
-		//falta calcular os dois scores e por aqui
 		Score scrLL = new ScoreLL(cfgs,learning,testing);
 		Score scrMDL = new ScoreMDL(cfgs,learning,testing);
 		s+="LL score: "+scrLL.getScore(mynet)+"\n";
@@ -228,13 +229,13 @@ public class BayesDyn implements BayesianNetwork{
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
 		String[] nomesranhosos = mydata.getNames(args[0]);
-		BayesDyn mamen = new BayesDyn(learn,test,"MDL",nomesranhosos,4);
-		mamen.setRestarts(0);
+		BayesDyn mamen = new BayesDyn(learn,test,"LL",nomesranhosos,30);
+		mamen.setRestarts(10);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
 		System.out.println(mamen);
-		int[] pila = mamen.getPredictions(3);
+		int[] pila = mamen.getPredictions(10);
 		for (int i = 0; i < test.length; i++) {
 			System.out.println(pila[i]);
 		}

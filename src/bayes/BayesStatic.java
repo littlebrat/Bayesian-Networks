@@ -39,25 +39,25 @@ public class BayesStatic implements BayesianNetwork{
 		randomrst=n;
 	}
 	
-//	public String toString() {
-//		String s= new String();
-//		s="===Structure connectivity\n";
-//		for(int i=0; i<nvars;i++){
-//			s+="node "+names[i]+" at t+1: ";
-//			for(int j=0; j<mynet.getParents(i).length;j++){
-//				if(mynet.getParents(i)[j]<=nvars-1){
-//					s+= names[mynet.getParents(i)[j]]+" ";
-//				}
-//			}
-//			s+="at time-slice t\n";
-//		}
-//		s+="===Scores\n";
-//		Score scrLL = new ScoreLL(cfgs,learning,testing);
-//		Score scrMDL = new ScoreMDL(cfgs,learning,testing);
-//		s+="LL score: "+scrLL.getScore(mynet)+"\n";
-//		s+="MDL score:  "+scrMDL.getScore(mynet)+"\n"; 
-//		return s;
-//	}
+	public String toString() {
+		String s= new String();
+		s="===Structure connectivity\n";
+		for(int i=0; i<nvars;i++){
+			s+="node "+names[i]+" at t+1: ";
+			for(int j=0; j<mynet.getParents(i).length;j++){
+				if(mynet.getParents(i)[j]<=nvars-1){
+					s+= names[mynet.getParents(i)[j]]+",";
+				}
+			}
+			s+="\n";
+		}
+		s+="===Scores\n";
+		Score scrLL = new ScoreLL(cfgs,learning,testing);
+		Score scrMDL = new ScoreMDL(cfgs,learning,testing);
+		s+="LL score: "+scrLL.getScore(mynet)+"\n";
+		s+="MDL score:  "+scrMDL.getScore(mynet)+"\n"; 
+		return s;
+	}
 	
 	private BayesStaticGraph bestAdd(){
 		BayesStaticGraph intra;
@@ -175,7 +175,7 @@ public class BayesStatic implements BayesianNetwork{
 		double timetobuild = System.currentTimeMillis();
 		String[] nomesranhosos = mydata.getNames(args[0]);
 		BayesStatic mamen = new BayesStatic(learn,test,"LL",nomesranhosos);
-		mamen.setRestarts(0);
+		mamen.setRestarts(3);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
