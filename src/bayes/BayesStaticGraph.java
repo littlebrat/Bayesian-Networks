@@ -4,18 +4,19 @@ import java.util.ArrayList;
 
 import dag.AdjacencyList;
 
-public class BayesStaticGraph extends AdjacencyList{
+public class BayesStaticGraph extends AdjacencyList implements BayesGraph{
 	private static int maxparents=3;
 	private int nvars;
 	
 	public BayesStaticGraph(int dim) {
 		super(dim);
+		nvars=dim;
 		// TODO Auto-generated constructor stub
 	}
 	
 	public BayesStaticGraph(int dim,int parentmax) {
 		super(dim);
-		nvars = dim/2;
+		nvars=dim;
 		maxparents=parentmax;
 		// TODO Auto-generated constructor stub
 	}
@@ -46,6 +47,20 @@ public class BayesStaticGraph extends AdjacencyList{
 			i++;
 		}
 		return res;
+	}
+	
+	@Override
+	public BayesStaticGraph clone() {
+		// TODO Auto-generated method stub
+		BayesStaticGraph cln = new BayesStaticGraph(this.size());
+		for (int i = 0; i < nvars; i++) {
+			for (int j = 0; j < nvars; j++) {
+				if(contains(i,j)){
+					cln.add(i,j);
+				}
+			}
+		}
+		return cln;
 	}
 	
 }

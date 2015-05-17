@@ -1,6 +1,5 @@
 package bayes;
 
-import java.util.LinkedList;
 import java.util.Random;
 
 import data.Data;//depois apagar isto
@@ -8,18 +7,20 @@ import data.DataTest;
 import data.DataTrain;
 
 public class BayesDyn implements BayesianNetwork{
+	
 	protected BayesTransitionGraph mynet;
 	protected Score scr;
 	private int nvars;
 	private int randomrst=0;
 	private String[] names;
-	private Tabu tabu;
+	private int[][] learning;
+	private int[][] testing;
+	private Configurations cfgs;
 	
-	
-	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar, int ntabu){
-		
-		Tabu tabu=new Tabu(ntabu);
-		Configurations cfgs = new Configurations(learning);
+	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar){
+		this.learning=learning;
+		this.testing=testing;
+		cfgs = new Configurations(learning);
 		nvars=learning[0].length/2;
 		mynet = new BayesTransitionGraph(learning[0].length);
 		names=namevar;
@@ -29,30 +30,22 @@ public class BayesDyn implements BayesianNetwork{
 
 	public String toString() {
 		String s= new String();
-		s="===Inter-slice connectivity\n";
-		for(int i=nvars; i<2*nvars;i++){
-			s+="node "+names[i-nvars]+" at t+1: ";
+		s="=== Structure connectivity\n";
+		for(int i=0; i<nvars;i++){
+			s+=names[i]+" : ";
 			for(int j=0; j<mynet.getParents(i).length;j++){
-				if(mynet.getParents(i)[j]<=nvars-1){
-					s+= names[mynet.getParents(i)[j]]+" ";
-				}
+				if(j==mynet.getParents(i).length-1){
+					s+= names[mynet.getParents(i)[j]];
+				}else if(mynet.getParents(i)[j]<nvars-1) s+= names[mynet.getParents(i)[j]]+" , ";
 			}
-			s+="at time-slice t\n";
-		}
-		s+="===Intra-slice connectivitiy\n";
-		for(int i=nvars; i<2*nvars;i++){
-			s+="node "+names[i-nvars]+" at t+1: ";
-			for(int j=0; j<mynet.getParents(i).length;j++){
-				if(mynet.getParents(i)[j]>=nvars){
-					s+= names[mynet.getParents(i)[j]-nvars]+" ";
-				}
-			}
-			s+="at time-slice t+1\n";
+			s+="\n";
 		}
 		s+="===Scores\n";
 		//falta calcular os dois scores e por aqui
-		s+="LL score:	\n";
-		s+="MDL score: \n";
+		Score scrLL = new ScoreLL(cfgs,learning,testing);
+		Score scrMDL = new ScoreMDL(cfgs,learning,testing);
+		s+="LL score: "+scrLL.getScore(mynet)+"\n";
+		s+="MDL score:  "+scrMDL.getScore(mynet)+"\n"; 
 		return s;
 	}
 	
@@ -69,9 +62,7 @@ public class BayesDyn implements BayesianNetwork{
 				if(i!=j){
 					intra=mynet.clone();
 					intra.add(i,j);
-					if(!(tabu.contains(intra))){
-						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
-					}
+					if(scr.getScore(intra)>scr.getScore(best)) best=intra;
 				}
 			}
 		}
@@ -81,9 +72,7 @@ public class BayesDyn implements BayesianNetwork{
 			for (int j = 0; j < nvars; j++) {
 				inter=mynet.clone();
 				inter.addInter(i,j);
-				if(!(tabu.contains(inter))){
-					if(scr.getScore(inter)>scr.getScore(best)) best=inter;
-				}
+				if(scr.getScore(inter)>scr.getScore(best)) best=inter;
 			}
 		}
 		inter=best;
@@ -101,9 +90,7 @@ public class BayesDyn implements BayesianNetwork{
 					if(i!=j){
 						intra=mynet.clone();
 						intra.remove(i,j);
-						if(!(tabu.contains(intra))){
-							if(scr.getScore(intra)>scr.getScore(best)) best=intra;
-						}
+						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
 					}
 				}
 			}
@@ -113,10 +100,7 @@ public class BayesDyn implements BayesianNetwork{
 				for (int j = 0; j < nvars; j++) {
 					inter=mynet.clone();
 					inter.removeInter(i,j);
-					if(!(tabu.contains(inter))){
-						if(scr.getScore(inter)>scr.getScore(best)) 
-							best=inter;
-					}
+					if(scr.getScore(inter)>scr.getScore(best)) best=inter;
 				}
 			}
 			inter=best;
@@ -135,9 +119,7 @@ public class BayesDyn implements BayesianNetwork{
 					if(i!=j){
 						intra= mynet.clone();
 						intra.reverse(i,j);
-						if(!(tabu.contains(intra))){
-							if(scr.getScore(intra)>scr.getScore(best)) best=intra;
-						}
+						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
 					}
 				}
 			}
@@ -217,9 +199,9 @@ public class BayesDyn implements BayesianNetwork{
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
-		String[] nomesranhosos = new String[2];
-		BayesDyn mamen = new BayesDyn(learn,test,"LL",nomesranhosos);
-		mamen.setRestarts(3);
+		String[] nomesranhosos = mydata.getNames(args[0]);
+		BayesDyn mamen = new BayesDyn(learn,test,"MDL",nomesranhosos);
+		mamen.setRestarts(0);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
@@ -227,7 +209,6 @@ public class BayesDyn implements BayesianNetwork{
 		int[] pila = mamen.getPredictions(7);
 		for (int i = 0; i < test.length; i++) {
 			System.out.println(pila[i]);
-		}
-		
+		}		
 	}
 }
