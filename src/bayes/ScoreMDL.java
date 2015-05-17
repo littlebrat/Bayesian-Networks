@@ -21,7 +21,7 @@ public class ScoreMDL extends Score{
 	}
 	
 	@Override
-	public double getScore(BayesTransitionGraph grp) {
+	public double getScore(BayesGraph grp) {
 		// TODO Auto-generated method stub
 		double res=0;
 		makeCounts(grp);

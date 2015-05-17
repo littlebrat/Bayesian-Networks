@@ -161,8 +161,8 @@ public class BayesDyn implements BayesianNetwork{
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
-		Random rd = new Random();
 		int restarts=0;
+		Random rd = new Random();
 		BayesTransitionGraph[] neighbours = new BayesTransitionGraph[3];
 		double bestscore=Double.NEGATIVE_INFINITY;
 		BayesTransitionGraph best=mynet.clone();
@@ -182,8 +182,8 @@ public class BayesDyn implements BayesianNetwork{
 			}
 			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
 			else if(scr.getScore(best)==scr.getScore(previous) && restarts<randomrst){
-				int opsnumber = rd.nextInt(2*nvars);
-				for(int i=0; i<opsnumber;i++){
+				int ops=(rd.nextInt(nvars)+1);
+				for(int i=0; i<ops;i++){
 					mynet=makeRandomOP();
 				}
 				restarts++;
@@ -204,16 +204,17 @@ public class BayesDyn implements BayesianNetwork{
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
 		String[] nomesranhosos = new String[2];
-		BayesDyn mamen = new BayesDyn(learn,test,"MDL",nomesranhosos);
-		mamen.setRestarts(100);
+		BayesDyn mamen = new BayesDyn(learn,test,"LL",nomesranhosos);
+		mamen.setRestarts(3);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
 		System.out.println(mamen);
-//		int[] pila = mamen.getPredictions(7);
-//		for (int i = 0; i < test.length; i++) {
-//			System.out.println(pila[i]);
-//		}
+		int[] pila = mamen.getPredictions(7);
+		for (int i = 0; i < test.length; i++) {
+			System.out.println(pila[i]);
+		}
+		
 		
 	}
 }

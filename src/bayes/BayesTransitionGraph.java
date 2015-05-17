@@ -1,11 +1,9 @@
 package bayes;
 
 import java.util.ArrayList;
-
 import dag.AdjacencyList;
 
-
-public class BayesTransitionGraph extends AdjacencyList{
+public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 	private static int maxparents=3;
 	private int nvars;
 	

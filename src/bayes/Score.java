@@ -2,6 +2,7 @@ package bayes;
 
 import java.util.ArrayList;
 import java.util.List;
+
 //tem cuidado com os tipos de dados se e int/double
 public abstract class Score {
 	protected Counts[] varcounts;
@@ -26,7 +27,7 @@ public abstract class Score {
 		this.pseudo=pseudo;
 	}
 	
-	protected double getLL(BayesTransitionGraph grp){
+	protected double getLL(BayesGraph grp){
 		double res = 0;
 		double n,nj;
 		for (Counts count : varcounts) {
@@ -52,7 +53,7 @@ public abstract class Score {
 		return res;
 	}
 	
-	protected void makeCounts(BayesTransitionGraph grp){
+	protected void makeCounts(BayesGraph grp){
 		ArrayList<int[]> fathers = new ArrayList<int[]>();
 		// construir a lista das configuracoes dos pais e iniciar os objectos das counts
 		for (int i = 0; i < grp.size(); i++) {
@@ -76,7 +77,7 @@ public abstract class Score {
 		}
 	}
 	
-	public abstract double getScore(BayesTransitionGraph grp);
+	public abstract double getScore(BayesGraph grp);
 	
 	protected double getParameter(int i, int j, int k){
 		double res;
