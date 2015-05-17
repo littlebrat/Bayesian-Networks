@@ -1,5 +1,6 @@
 package bayes;
 
+import java.util.LinkedList;
 import java.util.Random;
 
 import data.Data;//depois apagar isto
@@ -12,10 +13,12 @@ public class BayesDyn implements BayesianNetwork{
 	private int nvars;
 	private int randomrst=0;
 	private String[] names;
+	private Tabu tabu;
 	
 	
-	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar){
+	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar, int ntabu){
 		
+		Tabu tabu=new Tabu(ntabu);
 		Configurations cfgs = new Configurations(learning);
 		nvars=learning[0].length/2;
 		mynet = new BayesTransitionGraph(learning[0].length);
@@ -66,7 +69,9 @@ public class BayesDyn implements BayesianNetwork{
 				if(i!=j){
 					intra=mynet.clone();
 					intra.add(i,j);
-					if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+					if(!(tabu.contains(intra))){
+						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+					}
 				}
 			}
 		}
@@ -76,7 +81,9 @@ public class BayesDyn implements BayesianNetwork{
 			for (int j = 0; j < nvars; j++) {
 				inter=mynet.clone();
 				inter.addInter(i,j);
-				if(scr.getScore(inter)>scr.getScore(best)) best=inter;
+				if(!(tabu.contains(inter))){
+					if(scr.getScore(inter)>scr.getScore(best)) best=inter;
+				}
 			}
 		}
 		inter=best;
@@ -94,7 +101,9 @@ public class BayesDyn implements BayesianNetwork{
 					if(i!=j){
 						intra=mynet.clone();
 						intra.remove(i,j);
-						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						if(!(tabu.contains(intra))){
+							if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						}
 					}
 				}
 			}
@@ -104,7 +113,10 @@ public class BayesDyn implements BayesianNetwork{
 				for (int j = 0; j < nvars; j++) {
 					inter=mynet.clone();
 					inter.removeInter(i,j);
-					if(scr.getScore(inter)>scr.getScore(best)) best=inter;
+					if(!(tabu.contains(inter))){
+						if(scr.getScore(inter)>scr.getScore(best)) 
+							best=inter;
+					}
 				}
 			}
 			inter=best;
@@ -123,7 +135,9 @@ public class BayesDyn implements BayesianNetwork{
 					if(i!=j){
 						intra= mynet.clone();
 						intra.reverse(i,j);
-						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						if(!(tabu.contains(intra))){
+							if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						}
 					}
 				}
 			}
@@ -214,7 +228,6 @@ public class BayesDyn implements BayesianNetwork{
 		for (int i = 0; i < test.length; i++) {
 			System.out.println(pila[i]);
 		}
-		
 		
 	}
 }
