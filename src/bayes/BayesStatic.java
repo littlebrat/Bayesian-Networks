@@ -27,7 +27,7 @@ public class BayesStatic implements BayesianNetwork{
 			}			
 		}
 		this.learning=learn;
-		cfgs = new Configurations(learning);
+		cfgs = new Configurations(learn);
 		nvars=learning[0].length/2;
 		mynet = new BayesStaticGraph(nvars);
 		names=namevar;
