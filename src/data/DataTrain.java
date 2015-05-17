@@ -2,19 +2,37 @@ package data;
 import java.io.*;
 import java.util.Arrays;
 
+/**
+ * The class DataTrain is an implementation of the interface Data that handles with the training data file.
+ *
+ * @author Nuno Mendes nº73716
+ * @author Sofia Silva nº73483
+ * @author Tiago Ricardo nº73649
+ */
 public class DataTrain implements Data{
-	protected TimeSample[] training = new TimeSample[2];
+	protected TimeSample[] training;
 	public int num_va=0;
 	public int size=0;
+	protected String[] names;
 	
+	/**
+	 * The constructor creates an element of the type DataTrain that includes the number or random variables, the number of events and a 2-D array of type TimeSample. 
+	 * 
+	 * @throws IOException It throws an IOException when the file does not exist.
+	 * @see TimeSample
+	 * @see Event
+	 * @param url		String with the URL of the file
+	 */
 	public DataTrain(String url) throws IOException {
 		// TODO Auto-generated method stub
+		training = new TimeSample[2];
 		int i=0;
 		int j;
 		int jnxt;
 		int p;
 		int count=0;
 		int inext=0;
+		
 		BufferedReader commaFile = new BufferedReader (new FileReader(url));
 		String dataRow = commaFile.readLine();
 		dataRow=dataRow.replace(" ", "");
@@ -23,7 +41,12 @@ public class DataTrain implements Data{
 		while(valeat[i].endsWith("_0")){
 			count=count+1;
 			i++;
-		}	
+		}
+		names=new String[count];
+		for(i=0; i<count;i++){
+			names[i]=valeat[i].replace("_0", "");
+			
+		}
 		num_va=count;
 
 		dataRow = commaFile.readLine();
@@ -61,7 +84,6 @@ public class DataTrain implements Data{
 					evtnxt.add(listafinnxt);
 				this.training[0].add(evt);	
 				this.training[1].add(evtnxt);
-				System.out.println(evt.toString() + evtnxt.toString());
 				i=j*count;
 				j++;
 				}
@@ -71,28 +93,18 @@ public class DataTrain implements Data{
 		commaFile.close ();
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
 	 @Override
 	public String toString() {
 		return "DataTrain [training=" + Arrays.toString(training) + ", num_va="
 				+ num_va + ", size=" + size + "]";
 	}
 
-	public int getcfg(int va){
-		int rank = 0;
-		int max =0;
-		int index =0;
-		Event evt=new Event(this.training[0].samples.get(index).size());
-		for(index=0;index<this.training[0].samples.size();index++){
-			evt=this.training[0].samples.get(index);
-			if(evt.occurrences[va]>max){			
-			max=evt.occurrences[va];
-			}
-		}
-		rank=max+1;
-		return rank;
-	}
-
-
+	 /**
+		 * {@inheritDoc}
+		 */
 	@Override
 	public int[][] get(){
 		int i=0;
@@ -114,29 +126,13 @@ public class DataTrain implements Data{
 		return vect;
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
-	public String[] getNames(String url) throws IOException {
-		String[] vanames;
-		int i=0;
-		int count=0;
-		
-		BufferedReader commaFile = new BufferedReader (new FileReader(url));
-		String dataRow = commaFile.readLine();
-		dataRow=dataRow.replace(" ", "");
-		dataRow=dataRow.replace("	", "");
-		String [] valeat = dataRow.split (",");
-		while(valeat[i].endsWith("_0")){
-			i++;
-			count ++;
-		}	
-		vanames=new String[count];
-		for(i=0; i<count;i++){
-			vanames[i]=valeat[i].replace("_0", "");
-			System.out.println(vanames[i]);
-		}
-		
-		commaFile.close ();
-		return vanames;
+	public String[] getNames() {
+	
+		return names;
 	}
 	
 	

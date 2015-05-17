@@ -6,14 +6,31 @@ package data;
 import java.io.*;
 
 
+/**
+ * The class DataTest is an implementation of the interface Data that handles with the testing data file.
+ *
+ * @author Nuno Mendes nº73716
+ * @author Sofia Silva nº73483
+ * @author Tiago Ricardo nº73649
+ */
 
 public class DataTest implements Data{
-	protected TimeSample testing = new TimeSample();
+	protected TimeSample testing;
 	public int num_va=0;
 	public int size=0;
+	protected String[] names;
+	
+	/**
+	 * The constructor creates an element of the type DataTest that includes the number or random variables, the number of events and an element of type TimeSample. 
+	 * 
+	 * @throws IOException 	 It throws an IOException when the file does not exist.
+	 * @see TimeSample
+	 * @see Event
+	 * @param url		String with the URL of the file
+	 */
 	
 	public DataTest(String url) throws IOException {
-		
+		testing=new TimeSample();
 		BufferedReader commaFile = new BufferedReader (new FileReader(url));
 		String dataRow = commaFile.readLine();
 		dataRow = commaFile.readLine();
@@ -22,10 +39,14 @@ public class DataTest implements Data{
 			dataRow=dataRow.replace("	", "");
 			String [] data = dataRow.split (",");//Colunas separadas por virgula
 			num_va=data.length;
-			int [] lista =new int[data.length];
+			names=new String[num_va];
+			for(int i=0; i<num_va;i++){
+				names[i]=data[i];
+			}
+			int [] lista =new int[num_va];
 			
 			int i=0;
-				while (i<data.length) {
+				while (i<num_va) {
 					lista [i]= Integer.parseInt(data[i]);
 					i++;
 				}
@@ -37,12 +58,19 @@ public class DataTest implements Data{
 		}
 		commaFile.close ();
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	@Override
 	public String toString() {
 		return "Data [testing=" + testing + "]";
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
 	public int[][] get(){
 		int i=0;
 		int[][] vect=new int[this.size][this.num_va];
@@ -53,22 +81,11 @@ public class DataTest implements Data{
 		return vect;
 	}
 	
-	
-	public String[] getNames(String url) throws IOException {
-		String[] vanames;
-		BufferedReader commaFile = new BufferedReader (new FileReader(url));
-		String dataRow = commaFile.readLine();
-		dataRow = commaFile.readLine();
-		dataRow=dataRow.replace(" ", "");
-		dataRow=dataRow.replace("	", "");
-		String [] valeat = dataRow.split (",");
-		vanames=new String[valeat.length];
-		for(int i=0;i<valeat.length;i++){
-			vanames[i]=valeat[i];
-		}
-		commaFile.close ();
-		
-		return vanames;
+	/**
+	 * {@inheritDoc}
+	 */
+	public String[] getNames() {
+		return names;
 		
 	}
 	
