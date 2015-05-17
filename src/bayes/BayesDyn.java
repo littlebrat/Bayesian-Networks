@@ -7,17 +7,19 @@ import data.DataTest;
 import data.DataTrain;
 
 public class BayesDyn implements BayesianNetwork{
-	
 	protected BayesTransitionGraph mynet;
 	protected Score scr;
 	private int nvars;
 	private int randomrst=0;
 	private String[] names;
+	Tabu tabu;
 	private int[][] learning;
 	private int[][] testing;
 	private Configurations cfgs;
 	
-	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar){
+	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar, int ntabu){
+		
+		tabu=new Tabu(ntabu);
 		this.learning=learning;
 		this.testing=testing;
 		cfgs = new Configurations(learning);
@@ -30,15 +32,25 @@ public class BayesDyn implements BayesianNetwork{
 
 	public String toString() {
 		String s= new String();
-		s="=== Structure connectivity\n";
-		for(int i=0; i<nvars;i++){
-			s+=names[i]+" : ";
+		s="===Inter-slice connectivity\n";
+		for(int i=nvars; i<2*nvars;i++){
+			s+="node "+names[i-nvars]+" at t+1: ";
 			for(int j=0; j<mynet.getParents(i).length;j++){
-				if(j==mynet.getParents(i).length-1){
-					s+= names[mynet.getParents(i)[j]];
-				}else if(mynet.getParents(i)[j]<nvars-1) s+= names[mynet.getParents(i)[j]]+" , ";
+				if(mynet.getParents(i)[j]<=nvars-1){
+					s+= names[mynet.getParents(i)[j]]+" ";
+				}
 			}
-			s+="\n";
+			s+="at time-slice t\n";
+		}
+		s+="===Intra-slice connectivitiy\n";
+		for(int i=nvars; i<2*nvars;i++){
+			s+="node "+names[i-nvars]+" at t+1: ";
+			for(int j=0; j<mynet.getParents(i).length;j++){
+				if(mynet.getParents(i)[j]>=nvars){
+					s+= names[mynet.getParents(i)[j]-nvars]+" ";
+				}
+			}
+			s+="at time-slice t+1\n";
 		}
 		s+="===Scores\n";
 		//falta calcular os dois scores e por aqui
@@ -62,7 +74,9 @@ public class BayesDyn implements BayesianNetwork{
 				if(i!=j){
 					intra=mynet.clone();
 					intra.add(i,j);
-					if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+					if(!(tabu.contains(intra))){
+						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+					}
 				}
 			}
 		}
@@ -72,7 +86,9 @@ public class BayesDyn implements BayesianNetwork{
 			for (int j = 0; j < nvars; j++) {
 				inter=mynet.clone();
 				inter.addInter(i,j);
-				if(scr.getScore(inter)>scr.getScore(best)) best=inter;
+				if(!(tabu.contains(inter))){
+					if(scr.getScore(inter)>scr.getScore(best)) best=inter;
+				}
 			}
 		}
 		inter=best;
@@ -90,7 +106,9 @@ public class BayesDyn implements BayesianNetwork{
 					if(i!=j){
 						intra=mynet.clone();
 						intra.remove(i,j);
-						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						if(!(tabu.contains(intra))){
+							if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						}
 					}
 				}
 			}
@@ -100,7 +118,10 @@ public class BayesDyn implements BayesianNetwork{
 				for (int j = 0; j < nvars; j++) {
 					inter=mynet.clone();
 					inter.removeInter(i,j);
-					if(scr.getScore(inter)>scr.getScore(best)) best=inter;
+					if(!(tabu.contains(inter))){
+						if(scr.getScore(inter)>scr.getScore(best)) 
+							best=inter;
+					}
 				}
 			}
 			inter=best;
@@ -119,7 +140,9 @@ public class BayesDyn implements BayesianNetwork{
 					if(i!=j){
 						intra= mynet.clone();
 						intra.reverse(i,j);
-						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						if(!(tabu.contains(intra))){
+							if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						}
 					}
 				}
 			}
@@ -157,6 +180,7 @@ public class BayesDyn implements BayesianNetwork{
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
+		BayesTransitionGraph aux;
 		int restarts=0;
 		Random rd = new Random();
 		BayesTransitionGraph[] neighbours = new BayesTransitionGraph[3];
@@ -176,7 +200,11 @@ public class BayesDyn implements BayesianNetwork{
 					bestscore=scr.getScore(grp);
 				}
 			}
-			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
+			if(scr.getScore(best)>scr.getScore(previous)){
+				mynet=best;
+				aux=mynet.clone();
+				tabu.add(aux);
+			}
 			else if(scr.getScore(best)==scr.getScore(previous) && restarts<randomrst){
 				int ops=(rd.nextInt(nvars)+1);
 				for(int i=0; i<ops;i++){
@@ -200,15 +228,16 @@ public class BayesDyn implements BayesianNetwork{
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
 		String[] nomesranhosos = mydata.getNames(args[0]);
-		BayesDyn mamen = new BayesDyn(learn,test,"MDL",nomesranhosos);
+		BayesDyn mamen = new BayesDyn(learn,test,"MDL",nomesranhosos,4);
 		mamen.setRestarts(0);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
 		System.out.println(mamen);
-		int[] pila = mamen.getPredictions(7);
+		int[] pila = mamen.getPredictions(3);
 		for (int i = 0; i < test.length; i++) {
 			System.out.println(pila[i]);
-		}		
+		}
+		
 	}
 }
