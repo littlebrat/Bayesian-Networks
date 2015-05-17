@@ -5,7 +5,7 @@ import java.util.ArrayList;
 /**
  * Subclass of Node that represents a node of the graph
  * There is a directed association from the Origin to 
- * the other nodes - Destination (which are the parents)
+ * the other nodes - Destination objects (nodes to which the origin node points-directed edge)
  * 
  * @author Sofia Silva
  * @author Tiago Ricardo
@@ -17,7 +17,7 @@ import java.util.ArrayList;
 public class Origin<T> extends Node<T>{
 	
 	/**
-	 * ArrayList of Destination objects (Parents) of the Origin node - Directed Association
+	 * ArrayList of Destination objects of the Origin node - Directed Association
 	 */
 	
 	protected ArrayList<Destination<T>> destlist = new ArrayList<Destination<T>>();
@@ -59,9 +59,9 @@ public class Origin<T> extends Node<T>{
 	}
 	
 	/**
-	 * Checks if the origin node has any destinations nodes (parents)
+	 * Checks if the origin node has any destinations nodes 
 	 * 
-	 * @return 			true if the node has parents and false if otherwise
+	 * @return 			true if the node has nodes to which it points and false if otherwise
 	 */
 	
 	protected boolean isEmpty(){
@@ -70,7 +70,7 @@ public class Origin<T> extends Node<T>{
 	}
 	
 	/**
-	 * Checks if the origin node has a specific destination node (parent) associated
+	 * Checks if the origin node has a specific destination node associated
 	 * 
 	 * @param node 		type T parameter that represents the destination node 
 	 * @return 			true if the origin node has the corresponding destination node associated or false if otherwise

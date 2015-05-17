@@ -48,7 +48,7 @@ public interface Graph {
 	public void reverse(int ori,int dest);
 	
 	/**
-	 * Gets the all the destinations of a certain node
+	 * Gets the all the destinations of a certain node (nodes to which this a certain nodes points)
 	 * 
 	 * @param x 		Integer representation of Node to get destinations from
 	 * @return 			ArrayList with the integer representation of the destinations of node x 
@@ -57,7 +57,7 @@ public interface Graph {
 	public ArrayList<Integer> getDests(int x);
 	
 	/**
-	 * Gets the all the origins of a certain node
+	 * Gets the all the origins of a certain node (nodes which point to that certain node-it's parents)
 	 * 
 	 * @param x 		Integer representation of Node to get origins from
 	 * @return 			ArrayList with the integer representation of the origins of node x 

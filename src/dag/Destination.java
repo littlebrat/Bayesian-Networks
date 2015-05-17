@@ -2,7 +2,7 @@ package dag;
 
 /**
  * Subclass of Node that represents a node as being the 
- * destination of another node (parent)
+ * destination of another node (one or more Origin node point to it - it's parents)
  * 
  * @author Sofia Silva
  * @author Tiago Ricardo
