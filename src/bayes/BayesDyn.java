@@ -13,11 +13,12 @@ public class BayesDyn implements BayesianNetwork{
 	private int nvars;
 	private int randomrst=0;
 	private String[] names;
-	Tabu tabu;
+	private Tabu tabu;
+	
 	
 	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar, int ntabu){
 		
-		tabu=new Tabu(ntabu);
+		Tabu tabu=new Tabu(ntabu);
 		Configurations cfgs = new Configurations(learning);
 		nvars=learning[0].length/2;
 		mynet = new BayesTransitionGraph(learning[0].length);
@@ -174,7 +175,6 @@ public class BayesDyn implements BayesianNetwork{
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
-		BayesTransitionGraph aux;
 		int restarts=0;
 		Random rd = new Random();
 		BayesTransitionGraph[] neighbours = new BayesTransitionGraph[3];
@@ -194,11 +194,7 @@ public class BayesDyn implements BayesianNetwork{
 					bestscore=scr.getScore(grp);
 				}
 			}
-			if(scr.getScore(best)>scr.getScore(previous)){
-				mynet=best;
-				aux=mynet.clone();
-				tabu.add(aux);
-			}
+			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
 			else if(scr.getScore(best)==scr.getScore(previous) && restarts<randomrst){
 				int ops=(rd.nextInt(nvars)+1);
 				for(int i=0; i<ops;i++){
@@ -221,14 +217,14 @@ public class BayesDyn implements BayesianNetwork{
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
-		String[] nomesranhosos = mydata.getNames(args[0]);
-		BayesDyn mamen = new BayesDyn(learn,test,"LL",nomesranhosos,0);
+		String[] nomesranhosos = new String[2];
+		BayesDyn mamen = new BayesDyn(learn,test,"LL",nomesranhosos);
 		mamen.setRestarts(3);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
 		System.out.println(mamen);
-		int[] pila = mamen.getPredictions(3);
+		int[] pila = mamen.getPredictions(7);
 		for (int i = 0; i < test.length; i++) {
 			System.out.println(pila[i]);
 		}

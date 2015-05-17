@@ -18,7 +18,8 @@ public class Tabu {
 	/**
 	 * LinkedList of BayesGraph objects
 	 */
-	LinkedList<BayesGraph> tabulist;
+	private LinkedList<BayesGraph> tabulist = new LinkedList<BayesGraph>();
+	
 	/**
 	 * Creates a new Tabu object initializing the maxnum parameter 
 	 * 
@@ -27,7 +28,6 @@ public class Tabu {
 	public Tabu(int maxnum) {
 		// TODO Auto-generated constructor stub
 		this.maxnum=maxnum;
-		tabulist = new LinkedList<BayesGraph>();
 	}
 	
 	/**
@@ -37,12 +37,10 @@ public class Tabu {
 	 */
 	
 	public void add(BayesGraph graph){
-		if(maxnum!=0){
-			if(tabulist.size()==maxnum){
-				tabulist.removeFirst();
-			}
-			tabulist.add(graph);
+		if(tabulist.size()==maxnum){
+			tabulist.removeFirst();
 		}
+		tabulist.add(graph);
 	}
 
 	/**
@@ -54,19 +52,11 @@ public class Tabu {
 	
 	public boolean contains(BayesGraph graph){
 		
-		if(tabulist!=null){
-			for(BayesGraph bg: tabulist){
-				if(graph.equals(bg))
-					return true;
-			}
+		for(BayesGraph bg: tabulist){
+			if(graph.equals(bg))
+				return true;
 		}
 		
 		return false;
-	}
-	public static void main(String[] args) {
-		Tabu tabu= new Tabu(3);
-		BayesTransitionGraph btg=new BayesTransitionGraph(3);
-		tabu.add(btg);
-		System.out.println(tabu.tabulist.size());
 	}
 }

@@ -111,7 +111,8 @@ public class Origin<T> extends Node<T>{
 		final int prime = 31;
 		int result = super.hashCode();
 		result = prime * result
-				+ ((destlist == null) ? 0 : destlist.hashCode());
+				+ ((destlist == null) ? 0 : destlist.hashCode())
+				+((this.getValue() == null) ? 0 : this.getValue().hashCode());
 		return result;
 	}
 	
@@ -128,6 +129,8 @@ public class Origin<T> extends Node<T>{
 		if (!super.equals(obj))
 			return false;
 		if (getClass() != obj.getClass())
+			return false;
+		if (!(this.getValue().equals(((Origin<T>) obj).getValue())))
 			return false;
 		Origin<T> other = (Origin<T>) obj;
 		if (destlist == null) {
