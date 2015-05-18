@@ -15,7 +15,7 @@ public class BayesStatic implements BayesianNetwork{
 	private Configurations cfgs;
 	
 	public BayesStatic(int[][] learning,String s,String[] namevar,int ntabu){
-		
+		this.learning=learning;
 		tabu=new Tabu(ntabu);
 		cfgs = new Configurations(learning);
 		nvars=learning[0].length;
@@ -151,6 +151,7 @@ public class BayesStatic implements BayesianNetwork{
 					best=grp;
 					bestscore=scr.getScore(grp);
 				}
+				System.out.println(scr.getScore(grp));
 			}
 			if(scr.getScore(best)>scr.getScore(previous)){
 				mynet=best;
