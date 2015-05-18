@@ -40,10 +40,11 @@ public class Main {
 					BayesianNetwork dbn = new BayesDyn(dtrain.get(),dtest.get(),score,dtrain.getNames(),10);
 					dbn.setRestarts(randomrest);
 					dbn.greedyHill();
+					time1=(System.currentTimeMillis()-timetobuild)/1000;
 					BayesianNetwork sbn = new BayesStatic(dtrain.get(),dtest.get(),score,dtrain.getNames());
 					sbn.setRestarts(randomrest);
 					sbn.greedyHill();
-					time1=(System.currentTimeMillis()-timetobuild)/1000;
+					
 					
 					System.out.println("Building DBN: 	"+time1+" time\n");
 					System.out.println("Initial network:\n");
