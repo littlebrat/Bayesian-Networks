@@ -37,11 +37,11 @@ public class Main {
 					System.out.println("Parameters:	"+in.getTrain()+" "+in.getTest()+" "+score+" "+randomrest+" "+var+"\n");
 					
 					
-					BayesianNetwork dbn = new BayesDyn(dtrain.get(),score,dtrain.getNames(),100);
+					BayesianNetwork dbn = new BayesDyn(dtrain.get(),dtest.get(),score,dtrain.getNames(),100);
 					dbn.setRestarts(randomrest);
 					dbn.greedyHill();
 					time1=(System.currentTimeMillis()-timetobuild)/1000;
-					BayesianNetwork sbn = new BayesStatic(dtrain.getInitData(args[0]),score,dtrain.getNames(),100);
+					BayesianNetwork sbn = new BayesStatic(dtrain.get(),dtest.get(),score,dtrain.getNames(),100);
 					sbn.setRestarts(randomrest);
 					sbn.greedyHill();
 					
@@ -56,7 +56,7 @@ public class Main {
 					//var specified
 					if(var!=0){
 						timetobuild=System.currentTimeMillis();
-						int[] pred = dbn.getPredictions(var,dtest.get());
+						int[] pred = dbn.getPredictions(var);
 						time2=(System.currentTimeMillis()-timetobuild)/1000;
 						for(int i=0; i<pred.length;i++){
 							s+= "->instance "+i+":	"+pred[i]+"\n";
@@ -64,11 +64,11 @@ public class Main {
 					}else{
 						timetobuild=System.currentTimeMillis();
 						//var not specified
-						int[][]pred=dbn.getAllPredictions(dtest.get());
+						int[][]pred=dbn.getAllPredictions();
 						time2=(System.currentTimeMillis()-timetobuild)/1000;
 						for(int i=0; i<pred.length;i++){
 							s+= "->instance "+i+":	";
-							for(int j=0;j<dtrain.getNumVA();j++){
+							for(int j=0;j<dtrain.num_va;j++){
 								s+=pred[i][j]+",";
 							}
 							s=s.substring(0,s.length()-1);

@@ -1,19 +1,18 @@
 package data;
 import java.io.*;
-import java.util.ArrayList;
 import java.util.Arrays;
 
 /**
  * The class DataTrain is an implementation of the interface Data that handles with the training data file.
  *
- * @author Nuno Mendes
- * @author Sofia Silva
- * @author Tiago Ricardo
+ * @author Nuno Mendes nº73716
+ * @author Sofia Silva nº73483
+ * @author Tiago Ricardo nº73649
  */
 public class DataTrain implements Data{
 	protected TimeSample[] training;
-	protected int num_va=0;
-	protected int size=0;
+	public int num_va=0;
+	public int size=0;
 	protected String[] names;
 	
 	/**
@@ -95,66 +94,6 @@ public class DataTrain implements Data{
 	}
 	
 	/**
-	 * The method getInitData() allows access to all the values of the random variables at the time instant 0.
-	 * 
-	 * @throws IOException 	It throws an IOException when the file does not exist.
-	 * @see TimeSample
-	 * @see Event
-	 * @param url		 	String with the URL of the file
-	 */
-	public int[][] getInitData(String url) throws IOException {
-		int[][] datainit;
-		int i=0;
-		int j=0;
-		int count=0;
-		ArrayList<String> lista =new ArrayList<String>();
-		
-		BufferedReader commaFile = new BufferedReader (new FileReader(url));
-		String dataRow = commaFile.readLine();
-		
-			dataRow=dataRow.replace(" ", "");
-			dataRow=dataRow.replace("	", "");
-			String [] valeat = dataRow.split (",");
-			while(valeat[i].endsWith("_0")){
-				count=count+1;
-				i++;
-			}
-			dataRow = commaFile.readLine();
-			dataRow=dataRow.replace(" ", "");
-			dataRow=dataRow.replace("	", "");
-			valeat=dataRow.split (",");
-			while (dataRow!= null){	
-				dataRow=dataRow.replace(" ", "");
-				dataRow=dataRow.replace("	", "");
-				valeat=dataRow.split (",");
-				i=0;
-				while(i<count){
-					String value=valeat[i];
-					lista.add(value);
-					i++;
-				}
-			dataRow = commaFile.readLine();//Mudar de linha
-			
-			}
-		
-		commaFile.close();
-		datainit=new int[lista.size()/count][count];
-		i=0;
-		j=0;
-		for (String string : lista) {
-			if(i<lista.size()/count && j<count){
-				datainit[i][j]=Integer.parseInt(string);
-			}
-			j++;
-			if(j==count){
-				i++;
-				j=0;
-			}
-		}
-		return datainit;
-	}
-	
-	/**
 	 * {@inheritDoc}
 	 */
 	 @Override
@@ -196,20 +135,5 @@ public class DataTrain implements Data{
 		return names;
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getNumVA(){
-		return num_va;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getSize(){
-		return size;
-	}
 	
 }

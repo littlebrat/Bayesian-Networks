@@ -9,15 +9,15 @@ import java.io.*;
 /**
  * The class DataTest is an implementation of the interface Data that handles with the testing data file.
  *
- * @author Nuno Mendes
- * @author Sofia Silva
- * @author Tiago Ricardo
+ * @author Nuno Mendes nº73716
+ * @author Sofia Silva nº73483
+ * @author Tiago Ricardo nº73649
  */
 
 public class DataTest implements Data{
 	protected TimeSample testing;
-	protected int num_va=0;
-	protected int size=0;
+	public int num_va=0;
+	public int size=0;
 	protected String[] names;
 	
 	/**
@@ -84,25 +84,9 @@ public class DataTest implements Data{
 	/**
 	 * {@inheritDoc}
 	 */
-	@Override
 	public String[] getNames() {
 		return names;
 		
 	}
 	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getNumVA(){
-		return num_va;
-	}
-	
-	/**
-	 * {@inheritDoc}
-	 */
-	@Override
-	public int getSize(){
-		return size;
-	}
 }
