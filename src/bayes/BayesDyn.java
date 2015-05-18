@@ -54,7 +54,7 @@ public class BayesDyn implements BayesianNetwork{
 			s=s.substring(0,s.length()-1);
 			s+="\n";
 		}
-		s+="===Scores\n";
+		s+="\n===Scores\n";
 		Score scrLL = new ScoreLL(cfgs,learning,testing);
 		Score scrMDL = new ScoreMDL(cfgs,learning,testing);
 		s+="LL score: "+scrLL.getScore(mynet)+"\n";
@@ -219,26 +219,18 @@ public class BayesDyn implements BayesianNetwork{
 	}
 
 	public int[] getPredictions(int var){
-		return scr.getVarFromTests(var);
+		return scr.getVarFromTests(nvars+var-1);
 	}
 	
-	public static void main(String[] args) throws Exception{
-		Data mydata = new DataTrain(args[0]);
-		Data mytest = new DataTest(args[1]);
-		int[][] learn = mydata.get();
-		int[][] test = mytest.get();
-		double timetobuild = System.currentTimeMillis();
-		String[] nomesranhosos = mydata.getNames(args[0]);
-		BayesDyn mamen = new BayesDyn(learn,test,"LL",nomesranhosos,30);
-		mamen.setRestarts(10);
-		mamen.greedyHill();
-		timetobuild = System.currentTimeMillis()-timetobuild;
-		System.out.println(timetobuild/1000+" seconds");
-		System.out.println(mamen);
-		int[] pila = mamen.getPredictions(10);
-		for (int i = 0; i < test.length; i++) {
-			System.out.println(pila[i]);
+	public int[][] getAllPredictions(){
+		int[][] pred = new int[testing.length][nvars];
+		for(int i=1;i<nvars+1;i++){
+			int[] aux=getPredictions(i);
+			for(int j=0;j<aux.length;j++){
+				pred[j][i-1]=aux[j];
+			}
 		}
-		
+		return pred;
 	}
+	
 }

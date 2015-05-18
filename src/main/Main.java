@@ -3,6 +3,7 @@ package main;
 import java.io.IOException;
 
 import bayes.BayesDyn;
+import bayes.BayesStatic;
 import bayes.BayesianNetwork;
 import data.DataTest;
 import data.DataTrain;
@@ -22,34 +23,60 @@ public class Main {
 		}else{
 			
 				try{
-					String[] nomes;
 					Input in = new Input(args);
 					DataTrain dtrain=new DataTrain(in.getTrain());
 					DataTest dtest=new DataTest(in.getTest());
 					String score = new String();
-					nomes=new String[dtest.num_va];
-					for(int i=0;i<dtrain.num_va;i++){
-						System.out.println(dtest.getNames(in.getTrain())[i]);
-					}
 					
 					score=in.getScore();
 					int randomrest=in.getRandtest();
 					int var=in.getVar();
 					double timetobuild = System.currentTimeMillis();
 					double time1;
+					double time2;
+					System.out.println("Parameters:	"+in.getTrain()+" "+in.getTest()+" "+score+" "+randomrest+" "+var+"\n");
 					
-					System.out.println("Parameters:	"+in.getTrain()+" "+in.getTest()+" "+score+" "+randomrest+" "+var);
 					
-					
-					BayesianNetwork dbn = new BayesDyn(dtrain.get(),dtest.get(),score,dtrain.getNames(in.getTrain()));
+					BayesianNetwork dbn = new BayesDyn(dtrain.get(),dtest.get(),score,dtrain.getNames(),10);
+					dbn.setRestarts(randomrest);
 					dbn.greedyHill();
-					time1=System.currentTimeMillis()-timetobuild;
+					BayesianNetwork sbn = new BayesStatic(dtrain.get(),dtest.get(),score,dtrain.getNames());
+					sbn.setRestarts(randomrest);
+					sbn.greedyHill();
+					time1=(System.currentTimeMillis()-timetobuild)/1000;
 					
-					System.out.println("Building DBN: 	"+time1);
-					System.out.println("Initial network:");
-					
-					System.out.println("Transition network:");
+					System.out.println("Building DBN: 	"+time1+" time\n");
+					System.out.println("Initial network:\n");
+					System.out.println(sbn);
+					System.out.println("Transition network:\n");
 					System.out.println(dbn);
+					String s=new String();
+					System.out.println("Performing inference:\n");
+					//var specified
+					if(var!=0){
+						timetobuild=System.currentTimeMillis();
+						int[] pred = dbn.getPredictions(var);
+						time2=(System.currentTimeMillis()-timetobuild)/1000;
+						for(int i=0; i<pred.length;i++){
+							s+= "->instance "+i+":	"+pred[i]+"\n";
+						}
+					}else{
+						timetobuild=System.currentTimeMillis();
+						//var not specified
+						int[][]pred=dbn.getAllPredictions();
+						time2=(System.currentTimeMillis()-timetobuild)/1000;
+						for(int i=0; i<pred.length;i++){
+							s+= "->instance "+i+":	";
+							for(int j=0;j<dtrain.num_va;j++){
+								s+=pred[i][j]+",";
+							}
+							s=s.substring(0,s.length()-1);
+							s+="\n";
+						}
+						
+					}
+					System.out.println(s);
+					System.out.println("Inferring with the DBN:" +time2+" time");
 					}catch(WrongInput e){
 						System.err.println("Correct Input Format: data-train, data-test, score, random-restarts, vars");
 						System.exit(0);
