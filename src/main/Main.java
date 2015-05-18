@@ -37,11 +37,11 @@ public class Main {
 					System.out.println("Parameters:	"+in.getTrain()+" "+in.getTest()+" "+score+" "+randomrest+" "+var+"\n");
 					
 					
-					BayesianNetwork dbn = new BayesDyn(dtrain.get(),dtest.get(),score,dtrain.getNames(),10);
+					BayesianNetwork dbn = new BayesDyn(dtrain.get(),dtest.get(),score,dtrain.getNames(),100);
 					dbn.setRestarts(randomrest);
 					dbn.greedyHill();
 					time1=(System.currentTimeMillis()-timetobuild)/1000;
-					BayesianNetwork sbn = new BayesStatic(dtrain.get(),dtest.get(),score,dtrain.getNames());
+					BayesianNetwork sbn = new BayesStatic(dtrain.get(),dtest.get(),score,dtrain.getNames(),100);
 					sbn.setRestarts(randomrest);
 					sbn.greedyHill();
 					

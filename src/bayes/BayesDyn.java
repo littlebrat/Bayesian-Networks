@@ -2,9 +2,6 @@ package bayes;
 
 import java.util.Random;
 
-import data.Data;//depois apagar isto
-import data.DataTest;
-import data.DataTrain;
 
 public class BayesDyn implements BayesianNetwork{
 	protected BayesTransitionGraph mynet;

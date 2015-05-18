@@ -198,4 +198,16 @@ public class BayesStatic implements BayesianNetwork{
 		System.out.println(mamen);
 	
 	}
+
+	@Override
+	public int[] getPredictions(int var) {
+		// TODO Auto-generated method stub
+		return null;
+	}
+
+	@Override
+	public int[][] getAllPredictions() {
+		// TODO Auto-generated method stub
+		return null;
+	}
 }

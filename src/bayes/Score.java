@@ -19,6 +19,7 @@ public abstract class Score {
 		varcounts = new Counts[cfg.size()];
 	}
 	
+	@SuppressWarnings("static-access")
 	protected Score(Configurations cfg,int[][] tolearn,int[][] totest,int pseudo){
 		learning=tolearn;
 		testing=totest;
@@ -36,8 +37,8 @@ public abstract class Score {
 					nj=count.getNij(j);
 					for (int k = 0; k < cfg.ri(count.me); k++) {
 						n=count.getNijk(j,k);
-						if(n==0) res=res;
-						else res+=n*Math.log(n/nj)/Math.log(2);
+						if(n!=0) 
+							res+=n*Math.log(n/nj)/Math.log(2);
 					}
 				}
 			}
@@ -45,8 +46,8 @@ public abstract class Score {
 				nj=count.getNij(0);
 				for (int k = 0; k < cfg.ri(count.me); k++) {
 					n=count.getNijk(0,k);
-					if(n==0) res=res;
-					else res+=n*Math.log(n/nj)/Math.log(2);
+					if(n!=0)
+						res+=n*Math.log(n/nj)/Math.log(2);
 				}
 			}
 		}
