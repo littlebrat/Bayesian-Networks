@@ -115,7 +115,6 @@ public class AdjacencyList implements Graph{
 	 *{@inheritDoc}
 	 */
 
-	@Override
 	public ArrayList<Integer> getDests(int x) {
 		// TODO Auto-generated method stub
 		return originlist[x].getDests();
@@ -125,7 +124,6 @@ public class AdjacencyList implements Graph{
 	 *{@inheritDoc}
 	 */
 	
-	@Override
 	public ArrayList<Integer> getOrigins(int x) {
 		// TODO Auto-generated method stub
 		ArrayList<Integer> ori = new ArrayList<Integer>();
