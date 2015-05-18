@@ -6,6 +6,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+/**
+ * The class PopUpHelp extends JFrame and it's a window that contains a brief instructions manual on how to run the application. 
+ * 
+ * @author Nuno Mendes
+ * @author Sofia Silva
+ * @author Tiago Ricardo
+ * 
+ */
 @SuppressWarnings("serial")
 public class PopUpHelp extends JFrame{
 	public PopUpHelp(){

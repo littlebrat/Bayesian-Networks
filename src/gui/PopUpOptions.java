@@ -1,15 +1,26 @@
 package gui;
 
 import java.awt.BorderLayout;
+import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
+import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
 import javax.swing.JTextField;
 
+
+/**
+ * The class PopUpOptions extends JFrame and it's a window that contains several fields that allow the user to pick the desired parameters to run the application.
+ * 
+ * @author Nuno Mendes
+ * @author Sofia Silva
+ * @author Tiago Ricardo
+ * 
+ */
 @SuppressWarnings("serial")
 public class PopUpOptions extends JFrame{
 	JTextField textRandRest;
@@ -21,7 +32,20 @@ public class PopUpOptions extends JFrame{
 	JRadioButton scoreLL;
 	JRadioButton scoreMDL;
 	ButtonGroup scoregroup;
-	
+
+/**
+ *	Besides initializing the necessary fields and attributes, this constructor defines all the actions for the several JButtons through the callback mechanism addActionListener. 
+ * 	The index of the random variable
+ * 	The trainbutton and testbutton open the JFileChooser for both train file and test file, respectively. The helpbutton and infobutton open new frames that provide relevant information to the user. The parameterbutton opens
+ * 	a new window that allows the user to select the parameters for the program. This parameters are stored in the fields built specifically for that purpose. The runbutton runs the program with the parameters picked by the user while
+ * 	the savebutton's main function is to record the program results into a text file.
+ *
+ * @see JButton
+ * @see JFileChooser
+ * @see ArrayList
+ * 
+ * 
+ */
 	
 	public PopUpOptions(){
 		setTitle("Parameters");

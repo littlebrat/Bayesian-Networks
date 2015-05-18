@@ -15,6 +15,16 @@ import bayes.BayesianNetwork;
 import data.DataTest;
 import data.DataTrain;
 
+/**
+ * The class Commands extends JFrame opens a scrollable JTextArea in which the user can see the results before saving them into a file. This class handles the file names and parameters 
+ * in order to run the algorithms.
+ * 
+ * @author Nuno Mendes
+ * @author Sofia Silva
+ * @author Tiago Ricardo
+ * 
+ */
+
 @SuppressWarnings("serial")
 public class Commands extends JFrame{
 	JTextArea cmd;
@@ -24,8 +34,17 @@ public class Commands extends JFrame{
 	protected BayesianNetwork sbn;
 	protected double time1;
 	protected double time2;
-	protected ArrayList<String> dados;
+	protected ArrayList<String> data;
 	
+	/**
+	 * Besides opening a JTextArea where the data is printed, the constructor also runs the algorithms and it prints the results on the JTextArea.
+	 * 
+	 * @see JTextArea
+	 * @see JScrollPane
+	 * @see BayesianNetwork
+	 * @see Input
+	 * 
+	 */
 		public Commands(String[] input){
 			try{
 				JFrame f = new JFrame();
@@ -40,7 +59,7 @@ public class Commands extends JFrame{
 				DataTest dtest=new DataTest(in.getTest());
 				String score = new String();		
 				score=in.getScore();
-				dados=new ArrayList<String> ();
+				data=new ArrayList<String> ();
 			
 				int randomrest=in.getRandtest();
 				int var=in.getVar();
@@ -91,7 +110,7 @@ public class Commands extends JFrame{
 				}
 				cmd.append(s);
 				cmd.append("\nInferring with the DBN:" +time2+" time");
-				dados=save(dbn,sbn,s,time1,time2);
+				data=save(dbn,sbn,s,time1,time2);
 				}catch(WrongInput e){
 					System.err.println("Correct Input Format: data-train, data-test, score, random-restarts, vars");
 					System.exit(0);
@@ -108,25 +127,34 @@ public class Commands extends JFrame{
 		       
 			
 		}
-		
-		public BayesianNetwork getDBN(){
-			return dbn;
-		}
-		
+/**
+ * This method saves the data inside an ArrayList of Strings.
+ * 
+ * @see ArrayList
+ * @see BayesianNetwork
+ * @see SwingApplication
+ * @return	data	An organized ArrayList of Strings that contains the obtained results.
+ */
 		public ArrayList<String> save(BayesianNetwork dbn,BayesianNetwork sbn, String s,double time1,double time2) {
-			ArrayList<String> dados= new ArrayList<String>();
-			dados.add(dbn.toString());
-			dados.add(sbn.toString());
-			dados.add(s);
-			dados.add(Double.toString(time1));
-			dados.add(Double.toString(time2));
-			return dados;
+			ArrayList<String> data= new ArrayList<String>();
+			data.add(dbn.toString());
+			data.add(sbn.toString());
+			data.add(s);
+			data.add(Double.toString(time1));
+			data.add(Double.toString(time2));
+			return data;
 			
 		}
 
+/**
+ * This method allows other classes to access the protected element data that contains the obtained results.
+ * 
+ * @see ArrayList
+ * 
+ */
 		public ArrayList<String> getString() {
 			
-			return dados;
+			return data;
 		}
 	
 }

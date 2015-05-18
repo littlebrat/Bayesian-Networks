@@ -6,6 +6,14 @@ import javax.swing.ImageIcon;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 
+/**
+ * The class PopUpInfo extends JFrame and it's a window that contains information about the project and the group members. 
+ * 
+ * @author Nuno Mendes
+ * @author Sofia Silva
+ * @author Tiago Ricardo
+ * 
+ */
 @SuppressWarnings("serial")
 public class PopUpInfo extends JFrame{
 

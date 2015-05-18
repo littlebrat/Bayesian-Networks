@@ -5,7 +5,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
-import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -17,8 +16,18 @@ import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JFileChooser;
 
-import bayes.BayesianNetwork;
 
+/**
+ * The class SwingApplication extends JFrame and it's the "front-page" of our GUI. The user can interact with this menu of the GUI through JButtons and JFileChoosers that allow him 
+ * to run the program in a more user-friendly interface. This menu is divided into 3 big sections, the file/parameter(s) selection, the run and save operations and the Help/Info frames. The Help and Info frames
+ * provide information about the group members, name of the project and brief instructions on how to navigate in the GUI. The user needs to define the files and the parameters before running the application. The run and save operations
+ * run the program and besides showing the results, they also allow the user the option to save the results into a text file.
+ * 
+ * @author Nuno Mendes
+ * @author Sofia Silva
+ * @author Tiago Ricardo
+ * 
+ */
 
 	@SuppressWarnings("serial")
 	public class SwingApplication extends JFrame{
@@ -39,11 +48,22 @@ import bayes.BayesianNetwork;
 		String trainurl;
 		String testurl;
 		String[] input;
-		ArrayList<String> dados;
-		BayesianNetwork dbn=null;
+		ArrayList<String> data;
 		Commands cmd;
 		
-			public SwingApplication() throws IOException { 
+/**
+ *	Besides initializing the necessary fields and attributes, this constructor defines all the actions for the several JButtons through the callback mechanism addActionListener. If the user closes the application, it immediately exits the program. 
+ * 	The trainbutton and testbutton open the JFileChooser for both train file and test file, respectively. The helpbutton and infobutton open new frames that provide relevant information to the user. The parameterbutton opens
+ * 	a new window that allows the user to select the parameters for the program. This parameters are stored in the fields built specifically for that purpose. The runbutton runs the program with the parameters picked by the user while
+ * 	the savebutton's main function is to record the program results into a text file.
+ *
+ * @see JButton
+ * @see JFileChooser
+ * @see ArrayList
+ * 
+ * 
+ */
+			public SwingApplication(){ 
 				trainFile=new JFileChooser();
 				testFile= new JFileChooser();
 				resultsFile=new JFileChooser();
@@ -53,7 +73,7 @@ import bayes.BayesianNetwork;
 				testurl=new String();
 				trainurl=new String();
 				input=new String[5];
-				dados=new ArrayList<String> ();
+				data=new ArrayList<String> ();
 				
 				
 				setTitle("Learning Dynamic Bayesian Networks");
@@ -204,7 +224,7 @@ import bayes.BayesianNetwork;
 								String resultsURL= f.getPath();
 								
 								try {
-									printFile(input,resultsURL,dados);
+									printFile(input,resultsURL,data);
 									PopUpMessage saved=new PopUpMessage("DataSaved.png");
 									saved.setResizable(false);
 								}catch(FileNotFoundException e1){
@@ -227,19 +247,26 @@ import bayes.BayesianNetwork;
 						
 						cmd = new Commands(input);
 						cmd.setResizable(false);
-						dados=cmd.getString();
-						dbn=cmd.getDBN();
+						data=cmd.getString();
 						}
 					
 				});
 		}
-			public void printFile(String[] input,String url,ArrayList<String> dados) throws FileNotFoundException, UnsupportedEncodingException{
+	/**
+	 *	The printFile method writes the results obtained after running the programming into a text file chosen by the user.
+	 *
+	 * @throws FileNotFoundException	 
+	 * @throws UnsupportedEncodingException
+	 * @see ArrayList
+	 * 
+	 */
+			public void printFile(String[] input,String url,ArrayList<String> data) throws FileNotFoundException, UnsupportedEncodingException{
 				PrintWriter file = new PrintWriter(url, "UTF-8");
-				String dbn=dados.get(0);
-				String sbn=dados.get(1);
-				String s=dados.get(2);
-				String time1=dados.get(3);
-				String time2=dados.get(4);
+				String dbn=data.get(0);
+				String sbn=data.get(1);
+				String s=data.get(2);
+				String time1=data.get(3);
+				String time2=data.get(4);
 				file.println("Dynamic Bayesian Networks\n");
 				file.println("Train File: "+input[0]+"\n");
 				file.println("Test File: "+input[1]+"\n" );
