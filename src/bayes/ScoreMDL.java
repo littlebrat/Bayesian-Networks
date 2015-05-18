@@ -2,13 +2,13 @@ package bayes;
 
 public class ScoreMDL extends Score{
 
-	protected ScoreMDL(Configurations cfg,int[][] tolearn,int[][] totest) {
-		super(cfg,tolearn,totest);
+	protected ScoreMDL(Configurations cfg,int[][] tolearn) {
+		super(cfg,tolearn);
 		// TODO Auto-generated constructor stub
 	}
 	
-	protected ScoreMDL(Configurations cfg,int[][] tolearn,int[][] totest,int pseudo) {
-		super(cfg,tolearn,totest,pseudo);
+	protected ScoreMDL(Configurations cfg,int[][] tolearn,int pseudo) {
+		super(cfg,tolearn,pseudo);
 		// TODO Auto-generated constructor stub
 	}
 

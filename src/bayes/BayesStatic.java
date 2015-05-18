@@ -1,11 +1,7 @@
 package bayes;
 
-import java.io.IOException;
 import java.util.Random;
 
-import data.Data;
-import data.DataTest;
-import data.DataTrain;
 
 public class BayesStatic implements BayesianNetwork{
 	
@@ -16,26 +12,17 @@ public class BayesStatic implements BayesianNetwork{
 	private String[] names;
 	Tabu tabu;
 	private int[][] learning;
-	private int[][] testing;
 	private Configurations cfgs;
 	
-	public BayesStatic(int[][] learning,int[][] testing,String s,String[] namevar,int ntabu){
+	public BayesStatic(int[][] learning,String s,String[] namevar,int ntabu){
 		
 		tabu=new Tabu(ntabu);
-		this.testing=testing;
-		int[][] learn = new int[learning.length][learning[0].length/2];
-		for (int i = 0; i < learn.length; i++) {
-			for (int j = 0; j < learning[0].length/2; j++) {
-				learn[i][j]=learning[i][j];
-			}			
-		}
-		this.learning=learn;
-		cfgs = new Configurations(learn);
-		nvars=learning[0].length/2;
+		cfgs = new Configurations(learning);
+		nvars=learning[0].length;
 		mynet = new BayesStaticGraph(nvars);
 		names=namevar;
-		if(s.equals("MDL"))	scr = new ScoreMDL(cfgs,learning,testing);
-		else if(s.equals("LL")) scr = new ScoreLL(cfgs,learning,testing);
+		if(s.equals("MDL"))	scr = new ScoreMDL(cfgs,learning);
+		else if(s.equals("LL")) scr = new ScoreLL(cfgs,learning);
 	}
 
 	public void setRestarts(int n){
@@ -56,8 +43,8 @@ public class BayesStatic implements BayesianNetwork{
 			s+="\n";
 		}
 		s+="\n===Scores\n";
-		Score scrLL = new ScoreLL(cfgs,learning,testing);
-		Score scrMDL = new ScoreMDL(cfgs,learning,testing);
+		Score scrLL = new ScoreLL(cfgs,learning);
+		Score scrMDL = new ScoreMDL(cfgs,learning);
 		s+="LL score: "+scrLL.getScore(mynet)+"\n";
 		s+="MDL score:  "+scrMDL.getScore(mynet)+"\n"; 
 		return s;
@@ -183,30 +170,15 @@ public class BayesStatic implements BayesianNetwork{
 		mynet=best;
 	}
 
-	public static void main(String[] args) throws IOException {
-		Data mydata = new DataTrain(args[0]);
-		Data mytest = new DataTest(args[1]);
-		int[][] learn = mydata.get();
-		int[][] test = mytest.get();
-		double timetobuild = System.currentTimeMillis();
-		String[] nomesranhosos = mydata.getNames();
-		BayesStatic mamen = new BayesStatic(learn,test,"MDL",nomesranhosos,10);
-		mamen.setRestarts(2);
-		mamen.greedyHill();
-		timetobuild = System.currentTimeMillis()-timetobuild;
-		System.out.println(timetobuild/1000+" seconds");
-		System.out.println(mamen);
-	
-	}
 
 	@Override
-	public int[] getPredictions(int var) {
+	public int[] getPredictions(int var, int[][] testing) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
 	@Override
-	public int[][] getAllPredictions() {
+	public int[][] getAllPredictions(int[][] testing) {
 		// TODO Auto-generated method stub
 		return null;
 	}

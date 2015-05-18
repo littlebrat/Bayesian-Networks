@@ -10,19 +10,16 @@ public abstract class Score {
 	protected static double pseudo = 0.5;
 	protected Configurations cfg;
 	protected int[][] learning;
-	protected int[][] testing;
 	
-	protected Score(Configurations cfg,int[][] tolearn,int[][] totest){
+	protected Score(Configurations cfg,int[][] tolearn){
 		learning=tolearn;
-		testing=totest;
 		this.cfg=cfg;
 		varcounts = new Counts[cfg.size()];
 	}
 	
 	@SuppressWarnings("static-access")
-	protected Score(Configurations cfg,int[][] tolearn,int[][] totest,int pseudo){
+	protected Score(Configurations cfg,int[][] tolearn,int pseudo){
 		learning=tolearn;
-		testing=totest;
 		this.cfg=cfg;
 		varcounts = new Counts[cfg.size()];
 		this.pseudo=pseudo;
@@ -179,7 +176,7 @@ public abstract class Score {
 		return value;
 	}
 	
-	protected int[] getVarFromTests(int var){
+	protected int[] getVarFromTests(int var, int[][] testing){
 		int[] res = new int[testing.length];
 		for (int i = 0; i < testing.length; i++) {
 			res[i]=getVarValue(var,testing[i]);

@@ -2,13 +2,13 @@ package bayes;
 
 public class ScoreLL extends Score{
 
-	protected ScoreLL(Configurations cfg,int[][] tolearn,int[][] totest) {
-		super(cfg,tolearn,totest);
+	protected ScoreLL(Configurations cfg,int[][] tolearn) {
+		super(cfg,tolearn);
 		// TODO Auto-generated constructor stub
 	}
 	
-	protected ScoreLL(Configurations cfg,int[][] tolearn,int[][] totest,int pseudo) {
-		super(cfg,tolearn,totest,pseudo);
+	protected ScoreLL(Configurations cfg,int[][] tolearn,int pseudo) {
+		super(cfg,tolearn,pseudo);
 		// TODO Auto-generated constructor stub
 	}
 	

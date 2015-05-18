@@ -11,20 +11,18 @@ public class BayesDyn implements BayesianNetwork{
 	private String[] names;
 	Tabu tabu;
 	private int[][] learning;
-	private int[][] testing;
 	private Configurations cfgs;
 
-	public BayesDyn(int[][] learning,int[][] testing,String s,String[] namevar, int ntabu){
+	public BayesDyn(int[][] learning,String s,String[] namevar, int ntabu){
 
 		tabu=new Tabu(ntabu);
 		this.learning=learning;
-		this.testing=testing;
 		cfgs = new Configurations(learning);
 		nvars=learning[0].length/2;
 		mynet = new BayesTransitionGraph(learning[0].length);
 		names=namevar;
-		if(s.equals("MDL"))	scr = new ScoreMDL(cfgs,learning,testing);
-		else if(s.equals("LL")) scr = new ScoreLL(cfgs,learning,testing);
+		if(s.equals("MDL"))	scr = new ScoreMDL(cfgs,learning);
+		else if(s.equals("LL")) scr = new ScoreLL(cfgs,learning);
 	}
 
 	public String toString() {
@@ -40,7 +38,7 @@ public class BayesDyn implements BayesianNetwork{
 			s=s.substring(0,s.length()-1);
 			s+="\n";
 		}
-		s+="===Intra-slice connectivitiy\n";
+		s+="===Intra-slice connectivity\n";
 		for(int i=nvars; i<2*nvars;i++){
 			s+=names[i-nvars]+" : ";
 			for(int j=0; j<mynet.getParents(i).length;j++){
@@ -52,8 +50,8 @@ public class BayesDyn implements BayesianNetwork{
 			s+="\n";
 		}
 		s+="\n===Scores\n";
-		Score scrLL = new ScoreLL(cfgs,learning,testing);
-		Score scrMDL = new ScoreMDL(cfgs,learning,testing);
+		Score scrLL = new ScoreLL(cfgs,learning);
+		Score scrMDL = new ScoreMDL(cfgs,learning);
 		s+="LL score: "+scrLL.getScore(mynet)+"\n";
 		s+="MDL score:  "+scrMDL.getScore(mynet)+"\n";
 		return s;
@@ -216,14 +214,14 @@ public class BayesDyn implements BayesianNetwork{
 		mynet=best;
 	}
 
-	public int[] getPredictions(int var){
-		return scr.getVarFromTests(nvars+var-1);
+	public int[] getPredictions(int var,int[][] testing){
+		return scr.getVarFromTests(nvars+var-1, testing);
 	}
 
-	public int[][] getAllPredictions(){
+	public int[][] getAllPredictions(int[][] testing){
 		int[][] pred = new int[testing.length][nvars];
 		for(int i=1;i<nvars+1;i++){
-			int[] aux=getPredictions(i);
+			int[] aux=getPredictions(i, testing);
 			for(int j=0;j<aux.length;j++){
 				pred[j][i-1]=aux[j];
 			}

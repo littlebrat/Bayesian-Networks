@@ -6,7 +6,7 @@ public interface BayesianNetwork {
 	
 	void setRestarts(int n);
 	
-	int[] getPredictions(int var);
+	int[] getPredictions(int var, int[][] testing);
 
-	int[][] getAllPredictions();
+	int[][] getAllPredictions(int[][] testing);
 }

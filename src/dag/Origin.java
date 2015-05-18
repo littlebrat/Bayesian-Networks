@@ -104,7 +104,7 @@ public class Origin<T> extends Node<T>{
 	}
 	
 	/**
-	 * {@inheritDoc}
+	 *{@inheritDoc}
 	 */
 	@Override
 	public int hashCode() {

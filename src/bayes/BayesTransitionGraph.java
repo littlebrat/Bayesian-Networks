@@ -3,7 +3,20 @@ package bayes;
 import java.util.ArrayList;
 import dag.AdjacencyList;
 
+/**
+ * Represents a graph in a form of an adjacency list (extends AdjacencyList class) and also implements a BayesGraph.
+ * Particularly it represents a transition bayesian network which describes dependencies between random variables 
+ * at two different time instants t and t+1 (future random variables depend on current random variables but not the 
+ * other way around) and dependencies between random variables at time instant t+1.
+ * 
+ * @author Sofia Silva
+ * @author Tiago Ricardo
+ * @author Nuno Mendes
+ */
+
 public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
+	
+	
 	private static int maxparents=3;
 	private int nvars;
 	
