@@ -5,8 +5,9 @@ import java.util.ArrayList;
 import dag.Graph;
 
 /**
- * Interface which extends the Graph interface and represents a bayesian graph. It has the 
- * particularity of refering to the directed edges corresponding nodes as sons and parents, 
+ * Interface which extends the Graph interface and represents a bayesian graph. 
+ * A bayesian network has random variables for nodes. It has the particularity 
+ * of refering to the directed edges corresponding nodes as sons and parents, 
  * where the sons are the destinations of the edges, and the parents the origins.
  * 
  * @author Sofia Silva

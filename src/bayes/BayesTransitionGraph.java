@@ -16,15 +16,36 @@ import dag.AdjacencyList;
 
 public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 	
-	
+	/**
+	 * Integer parameter that represents the maximum number of parents a certain node can have. By default that number is 3
+	 */
 	private static int maxparents=3;
+	/**
+	 * Integer parameter that represents the number of random variables represented in the graph,
+	 * which will be half the number of nodes of the graph
+	 */
 	private int nvars;
+	
+	/**
+	 * Creates a new BayesStaticGraph object with a certain number of random variables representing 
+	 * it, and uses the default number of maximum parents
+	 * 
+	 * @param dim  represents the number of nodes of the graph to be created
+	 */
 	
 	public BayesTransitionGraph(int dim) {
 		super(dim);
 		nvars = dim/2;
 		// TODO Auto-generated constructor stub
 	}
+	
+	/**
+	 *  Creates a new BayesStaticGraph object with a certain number of random variables representing
+	 *   it and a new number of maximum parents, other than the default.
+	 * 
+	 * @param dim		represents the number of nodes of the graph to be created
+	 * @param parentmax		represents the maximum number of parents a node can have
+	 */
 	
 	public BayesTransitionGraph(int dim,int parentmax) {
 		super(dim);
@@ -33,17 +54,35 @@ public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 		// TODO Auto-generated constructor stub
 	}
 	
+	/**
+	 * {@inheritDoc}.
+	 * Adding an edge only between random variables referring to time slice t+1 
+	 */
+	
 	public void add(int ori, int dest) {
 		// TODO Auto-generated method stub
 		if(this.getOrigins(dest+nvars).size()<maxparents && dest < nvars && ori < nvars)
 			super.add(ori+nvars,dest+nvars);
 	}
 	
+	/**
+	 * Adding an edge between a node representing a random variable from time slice
+	 * t and one from time slice t+1
+	 * 
+	 * @param ori		origin node of the desired new edge
+	 * @param dest		destination node of the desired new edge
+	 */
+	
 	public void addInter(int ori, int dest) {
 		// TODO Auto-generated method stub
 		if(this.getOrigins(dest+nvars).size()<maxparents && dest < nvars && ori < nvars)
 			super.add(ori,dest+nvars);
 	}
+	
+	/**
+	 * {@inheritDoc}.
+	 * Removing an edge only between random variables referring to time slice t+1 
+	 */
 
 	@Override
 	public void remove(int ori, int dest) {
@@ -52,11 +91,24 @@ public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 			super.remove(ori+nvars,dest+nvars);
 	}
 	
+	/**
+	 * Removing an edge between a node representing a random variable from time slice
+	 * t and one from time slice t+1
+	 * 
+	 * @param ori		origin node of the desired edge to remove
+	 * @param dest		destination node of the desired edge to remove
+	 */
+	
 	public void removeInter(int ori, int dest) {
 		// TODO Auto-generated method stub
 		if(dest < nvars && ori < nvars)
 			super.remove(ori,dest+nvars);
 	}
+	
+	/**
+	 * {@inheritDoc}.
+	 * Checking if there is an edge only between random variables referring to time slice t+1
+	 */
 
 	@Override
 	public boolean contains(int ori, int dest) {
@@ -66,12 +118,23 @@ public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 		else return false;
 	}
 	
+	/**
+	 * Checking if there is an edge between a node representing a random variable from time slice
+	 * t and one from time slice t+1
+	 * 
+	 * @param ori		origin node of the desired edge to be checked
+	 * @param dest		destination node of the desired edge to be checked
+	 */
 	
 	public boolean containsInter(int ori, int dest) {
 		if(dest < nvars && ori < nvars)
 			return super.contains(ori, dest+nvars);
 		else return false;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	
 	@Override
 	public void reverse(int ori, int dest) {
@@ -80,12 +143,20 @@ public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 			super.reverse(ori+nvars,dest+nvars);
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+	
 	public ArrayList<Integer> getSons(int x){
 		ArrayList<Integer> res = getDests(x);
 		return res;
 	}
 	
-	public int[] getParents(int x){//adicionar exceptioon
+	/**
+	 * {@inheritDoc}
+	 */
+	
+	public int[] getParents(int x){
 		int[] res;
 		ArrayList<Integer> temp = getOrigins(x);
 		res = new int[temp.size()];
@@ -97,11 +168,19 @@ public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 		return res;
 	}
 	
+	/**
+	 * {@inheritDoc}
+	 */
+
 	@Override
 	public boolean isEmpty() {
 		// TODO Auto-generated method stub
 		return super.isEmpty();
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 	
 	@Override
 	public int hashCode() {
@@ -110,6 +189,10 @@ public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 		result = prime * result + nvars;
 		return result;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 
 	@Override
 	public boolean equals(Object obj) {
@@ -124,6 +207,10 @@ public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 			return false;
 		return true;
 	}
+	
+	/**
+	 * {@inheritDoc}
+	 */
 
 	@Override
 	public BayesTransitionGraph clone() {

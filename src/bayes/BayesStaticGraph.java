@@ -40,7 +40,8 @@ public class BayesStaticGraph extends AdjacencyList implements BayesGraph{
 	}
 	
 	/**
-	 *  Creates a new BayesStaticGraph object with a certain number of nodes and a new number of maximum parents, other than the default 
+	 *  Creates a new BayesStaticGraph object with a certain number of random variables representing
+	 *  it and a new number of maximum parents, other than the default 
 	 * 
 	 * @param dim		represents the number of nodes of the graph to be created
 	 * @param parentmax		represents the maximum number of parents a node can have

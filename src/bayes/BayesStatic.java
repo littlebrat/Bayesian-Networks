@@ -2,6 +2,18 @@ package bayes;
 
 import java.util.Random;
 
+/**
+ * Represents a Simple Bayesian Network (implements the BayesianNetwork interface)
+ * to be learned using Bayes Static Graphs, meaning learning dependences in the same time slice.  
+ * To escape local maximum, besides the random restarts, a TABU list is used to prevent 
+ * the revisiting of a recently seen graph.The GHC algorithm uses as stopping criteria
+ * reaching a local maximum.
+ * 
+ * @author Sofia Silva
+ * @author Tiago Ricardo
+ * @author Nuno Mendes
+ *
+ */
 
 public class BayesStatic implements BayesianNetwork{
 	
@@ -14,7 +26,20 @@ public class BayesStatic implements BayesianNetwork{
 	private int[][] learning;
 	private Configurations cfgs;
 	
+	/**
+	 * Creates a new BayesDyn object which initializes a TABU list, the training data to be used
+	 * the configurations of the random variables given in the training set, the number of random variables,
+	 * a new BayesTransitionNetwork object, the names of the random variables and a new Score object
+	 *  
+	 *   
+	 * @param learning		the training data
+	 * @param s				the type of score to be computed
+	 * @param namevar		names of the random variables
+	 * @param ntabu			maximum size of the TABU list
+	 */
+	
 	public BayesStatic(int[][] learning,String s,String[] namevar,int ntabu){
+		
 		this.learning=learning;
 		tabu=new Tabu(ntabu);
 		cfgs = new Configurations(learning);
@@ -25,9 +50,18 @@ public class BayesStatic implements BayesianNetwork{
 		else if(s.equals("LL")) scr = new ScoreLL(cfgs,learning);
 	}
 
+	/**
+	 * {@inheritDoc}
+	 */
+	
 	public void setRestarts(int n){
 		randomrst=n;
 	}
+	
+	/**
+	 * String representation of the BayesDyn in terms of dependences between 
+	 * nodes - parents of each node (random variable)
+	 */
 	
 	public String toString() {
 		String s= new String();
@@ -50,6 +84,14 @@ public class BayesStatic implements BayesianNetwork{
 		return s;
 	}
 	
+	/**
+	 * Computes all graphs obtained by adding an edge to the previous 
+	 * graph and stores the one with the best score. If the resulting graph is 
+	 * in the TABU list it is not considered as it's score is not computed
+	 * 
+	 * @return		graph with the best score
+	 */
+	
 	private BayesStaticGraph bestAdd(){
 		BayesStaticGraph intra;
 		BayesStaticGraph best = mynet.clone();
@@ -66,6 +108,14 @@ public class BayesStatic implements BayesianNetwork{
 		}
 		return best;
 	}
+	
+	/**
+	 * Computes all graphs obtained by removing an edge to the previous 
+	 * graph and stores the one with the best score. If the resulting graph is 
+	 * in the TABU list it is not considered as it's score is not computed
+	 * 
+	 * @return		graph with the best score
+	 */
 	
 	public BayesStaticGraph bestRemove(){
 		if(!mynet.isEmpty()){
@@ -85,6 +135,14 @@ public class BayesStatic implements BayesianNetwork{
 		}
 		return mynet;
 	}
+	
+	/**
+	 * Computes all graphs obtained by reversing an edge to the previous 
+	 * graph and stores the one with the best score. If the resulting graph is 
+	 * in the TABU list it is not considered as it's score is not computed
+	 * 
+	 * @return		graph with the best score
+	 */
 
 	private BayesStaticGraph bestReverse(){
 		if(!mynet.isEmpty()){
@@ -105,6 +163,13 @@ public class BayesStatic implements BayesianNetwork{
 		}
 		return mynet;
 	}
+	
+	/**
+	 * Makes one Random operation out of the possible 3- add, reverse and remove 
+	 * an edge form the graph with random origin and destination node
+	 * 
+	 * @return	resulting graph after applying the random operation
+	 */
 	
 	private BayesStaticGraph makeRandomOP() {
 		// TODO Auto-generated method stub
@@ -129,6 +194,16 @@ public class BayesStatic implements BayesianNetwork{
 		}
 		return grp;
 	}
+	
+	/**
+	 * {@inheritDoc}.
+	 * The GHC algorithm stars with a graph with no edges. At each iteration the algorithm computes the best scoring 
+	 * neighbor (a graph that is created applying one of the 3 operations - add, remove or reverse) of the previous 
+	 * best scoring graph. If a better scoring graph is found, it goes in the TABU list and a new iteration starts with 
+	 * the new best graph as the one we want to compute the neighbors of. When no neighbor has a better score a new 
+	 * random graph is generated with a random number of operations and new iterations are computed until a local maximum
+	 * is achieved again. When the total number of restarts is reached the best scoring graph is stored.
+	 */
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
@@ -169,13 +244,19 @@ public class BayesStatic implements BayesianNetwork{
 		scr.makeEstimates();
 		mynet=best;
 	}
-
+	
+	/**
+	 * {@inheritDoc}
+	 */
 
 	@Override
 	public int[] getPredictions(int var, int[][] testing) {
 		// TODO Auto-generated method stub
 		return null;
 	}
+	/**
+	 * {@inheritDoc}
+	 */
 
 	@Override
 	public int[][] getAllPredictions(int[][] testing) {
