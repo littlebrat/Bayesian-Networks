@@ -22,9 +22,9 @@ public class TrainFile implements ActionListener {
 			try {
 				int[][] vect;
 				DataTrain d= new DataTrain(fileURL);
-				vect= new int[d.size][d.num_va];
+				vect= new int[d.getSize()][d.getNumVA()];
 				vect=d.get();
-				for(int i=0; i<d.size;i++){
+				for(int i=0; i<d.getSize();i++){
 					System.out.println("DataTrain(t)["+i+"]:"+vect[i][0]+vect[i][1]+vect[i][2]+"/// DataTrain(t+1):"+vect[i][3]+vect[i][4]+vect[i][5]);	
 			}
 			} catch (IOException e1) {

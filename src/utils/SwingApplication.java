@@ -4,7 +4,11 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.PrintWriter;
+import java.io.UnsupportedEncodingException;
 import java.net.URL;
+import java.util.ArrayList;
 
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
@@ -23,8 +27,6 @@ import javax.swing.JFileChooser;
 		private JButton helpbutton;
 		private JButton infobutton;
 		private JButton parameterbutton;
-		@SuppressWarnings("unused")
-		private Commands cmd;
 		JFileChooser trainFile;
 		JFileChooser testFile;
 		JFileChooser resultsFile;
@@ -34,6 +36,7 @@ import javax.swing.JFileChooser;
 		String trainurl;
 		String testurl;
 		String[] input;
+		ArrayList<String> dados;
 		
 		
 			public SwingApplication() { 
@@ -46,6 +49,7 @@ import javax.swing.JFileChooser;
 				testurl=new String();
 				trainurl=new String();
 				input=new String[5];
+				dados=new ArrayList<String> ();
 				
 				setTitle("Learning Dynamic Bayesian Networks");
 			    setSize(1000,550);
@@ -55,7 +59,6 @@ import javax.swing.JFileChooser;
 			   
 			    setLayout(new BorderLayout());
 			    URL imgURL = SwingApplication.class.getResource("newInterfaceData.png");
-			    System.out.println(imgURL);
 			    ImageIcon fundo = new ImageIcon(imgURL);
 			    JLabel background=new JLabel(fundo);
 			    add(background);
@@ -143,7 +146,6 @@ import javax.swing.JFileChooser;
 							@Override
 							public void actionPerformed(ActionEvent arg0) {
 								randomrest=option.getRR();
-								System.out.println("RandomRest: "+randomrest);
 							}		
 							
 						});
@@ -153,7 +155,6 @@ import javax.swing.JFileChooser;
 							@Override
 							public void actionPerformed(ActionEvent arg0) {
 								var=option.getVar();
-								System.out.println("Var: "+var);
 							}
 							
 						});
@@ -164,7 +165,6 @@ import javax.swing.JFileChooser;
 							@Override
 							public void actionPerformed(ActionEvent arg0) {
 								score=option.getScore();
-								System.out.println("Score: "+score);
 							}
 							
 							
@@ -191,28 +191,67 @@ import javax.swing.JFileChooser;
 			
 				savebutton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent arg0) {
-					input[0]=trainurl;
-					input[1]=testurl;
-					input[2]=score;
-					input[3]=randomrest;
-					input[4]=var;
+					int encontrouVal = resultsFile.showSaveDialog(resultsFile);
+					if (encontrouVal == JFileChooser.APPROVE_OPTION) {
+							File f = resultsFile.getSelectedFile();
+							String resultsURL= f.getPath();
+							System.out.println(resultsURL);
+							
+							try {
+								printFile(input,resultsURL,dados);
+								System.out.println(dados);
+							}catch(FileNotFoundException e1){
+								System.err.println("File not Found");
+							}catch(UnsupportedEncodingException e2){
+								System.err.println("Encoding not Supported");
+							}
+					}	
 				}	
 			});
 				runbutton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
-						int encontrouVal = resultsFile.showSaveDialog(resultsFile);//abre uma janela para escolher o directorio onde vai guardar o ficheiro
-							if (encontrouVal == JFileChooser.APPROVE_OPTION) {
-									File f = resultsFile.getSelectedFile();
-									String resultsURL= f.getPath();
-									System.out.println(resultsURL);
-									Commands cmd = new Commands(input,resultsURL);
-									cmd.setResizable(false);
-							}
+						input[0]=trainurl;
+						input[1]=testurl;
+						input[2]=score;
+						input[3]=randomrest;
+						input[4]=var;
+						
+						Commands cmd = new Commands(input);
+						cmd.setResizable(false);
+						dados=cmd.getString();
 						}
 					
 			
 				});
 		}
+			public void printFile(String[] input,String url,ArrayList<String> dados) throws FileNotFoundException, UnsupportedEncodingException{
+				PrintWriter file = new PrintWriter(url, "UTF-8");
+				String dbn=dados.get(0);
+				String sbn=dados.get(1);
+				String s=dados.get(2);
+				String time1=dados.get(3);
+				String time2=dados.get(4);
+				file.println("Dynamic Bayesian Networks\n");
+				file.println("Train File: "+input[0]+"\n");
+				file.println("Test File: "+input[1]+"\n" );
+				file.println("Score: "+input[2]+"\n");
+				file.println("Random Restarts: "+input[3]+"\n");
+				if(input[4]=="0"){
+					file.println("Variable: ALL\n");
+				}else{
+					file.println("Variable: "+input[4]+"\n");
+				}
+				file.println("Building DBN: "+ time1+" time\n");
+				file.println("Initial Network:\n");
+				file.println(sbn);
+				file.println("Transition Network:\n");
+				file.println(dbn);
+				file.println("Performing inference:\n");
+				file.println(s);
+				file.println("Inferring with the DBN:" +time2+" time");
+				file.close();
+				
+			}
 			
 	}
 	
