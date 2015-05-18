@@ -171,7 +171,7 @@ public class BayesStatic implements BayesianNetwork{
 				tabu.add(aux);
 			}
 			else if(scr.getScore(best)==scr.getScore(previous) && restarts<randomrst){
-				int ops=(rd.nextInt(nvars)+1);
+				int ops=(rd.nextInt(nvars*3)+1);
 				for(int i=0; i<ops;i++){
 					mynet=makeRandomOP();
 				}
