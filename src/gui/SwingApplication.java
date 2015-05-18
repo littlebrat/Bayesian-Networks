@@ -1,10 +1,11 @@
-package utils;
+package gui;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.File;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.UnsupportedEncodingException;
 import java.net.URL;
@@ -15,6 +16,8 @@ import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JFileChooser;
+
+import bayes.BayesianNetwork;
 
 
 	@SuppressWarnings("serial")
@@ -37,9 +40,10 @@ import javax.swing.JFileChooser;
 		String testurl;
 		String[] input;
 		ArrayList<String> dados;
+		BayesianNetwork dbn=null;
+		Commands cmd;
 		
-		
-			public SwingApplication() { 
+			public SwingApplication() throws IOException { 
 				trainFile=new JFileChooser();
 				testFile= new JFileChooser();
 				resultsFile=new JFileChooser();
@@ -50,6 +54,7 @@ import javax.swing.JFileChooser;
 				trainurl=new String();
 				input=new String[5];
 				dados=new ArrayList<String> ();
+				
 				
 				setTitle("Learning Dynamic Bayesian Networks");
 			    setSize(1000,550);
@@ -167,12 +172,12 @@ import javax.swing.JFileChooser;
 								score=option.getScore();
 							}
 							
+								
+							});
 							
-						});
-						
-						
-					}
-				});
+							
+						}
+					});
 				
 				
 				
@@ -190,38 +195,42 @@ import javax.swing.JFileChooser;
 				});
 			
 				savebutton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent arg0) {
-					int encontrouVal = resultsFile.showSaveDialog(resultsFile);
-					if (encontrouVal == JFileChooser.APPROVE_OPTION) {
-							File f = resultsFile.getSelectedFile();
-							String resultsURL= f.getPath();
-							System.out.println(resultsURL);
-							
-							try {
-								printFile(input,resultsURL,dados);
-								System.out.println(dados);
-							}catch(FileNotFoundException e1){
-								System.err.println("File not Found");
-							}catch(UnsupportedEncodingException e2){
-								System.err.println("Encoding not Supported");
-							}
-					}	
+						
+						public void actionPerformed(ActionEvent arg0) {
+														
+						int encontrouVal = resultsFile.showSaveDialog(resultsFile);
+						if (encontrouVal == JFileChooser.APPROVE_OPTION) {
+								File f = resultsFile.getSelectedFile();
+								String resultsURL= f.getPath();
+								
+								try {
+									printFile(input,resultsURL,dados);
+									PopUpMessage saved=new PopUpMessage("DataSaved.png");
+									saved.setResizable(false);
+								}catch(FileNotFoundException e1){
+									System.err.println("File not Found");
+								}catch(UnsupportedEncodingException e2){
+									System.err.println("Encoding not Supported");
+								}
+						}	
 				}	
 			});
 				runbutton.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent arg0) {
+						
 						input[0]=trainurl;
 						input[1]=testurl;
 						input[2]=score;
 						input[3]=randomrest;
 						input[4]=var;
 						
-						Commands cmd = new Commands(input);
+						
+						cmd = new Commands(input);
 						cmd.setResizable(false);
 						dados=cmd.getString();
+						dbn=cmd.getDBN();
 						}
 					
-			
 				});
 		}
 			public void printFile(String[] input,String url,ArrayList<String> dados) throws FileNotFoundException, UnsupportedEncodingException{

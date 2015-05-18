@@ -1,4 +1,4 @@
-package utils;
+package gui;
 
 
 public class WrongScoreType extends Exception {

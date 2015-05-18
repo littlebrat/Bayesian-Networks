@@ -1,5 +1,10 @@
 package main;
 
+import gui.SwingApplication;
+import gui.WrongFileExtension;
+import gui.WrongInput;
+import gui.WrongScoreType;
+
 import java.io.IOException;
 
 import bayes.BayesDyn;
@@ -8,15 +13,11 @@ import bayes.BayesianNetwork;
 import data.DataTest;
 import data.DataTrain;
 import utils.Input;
-import utils.SwingApplication;
-import utils.WrongFileExtension;
-import utils.WrongInput;
-import utils.WrongScoreType;
 
 
 public class Main {
 
-	public static void main(String[] args){
+	public static void main(String[] args) throws IOException{
 		if(args[0].equals("-gui")==true){
 			SwingApplication app=new SwingApplication();
 			app.setResizable(false);

@@ -1,4 +1,4 @@
-package utils;
+package gui;
 
 import java.awt.BorderLayout;
 
@@ -12,8 +12,8 @@ import javax.swing.JTextField;
 
 @SuppressWarnings("serial")
 public class PopUpOptions extends JFrame{
-	private JTextField textRandRest;
-	private JTextField textVar;
+	JTextField textRandRest;
+	JTextField textVar;
 	
 	JButton randomrest;
 	JButton var;
@@ -77,6 +77,7 @@ public class PopUpOptions extends JFrame{
 		var.setContentAreaFilled(false);
 		var.setBorderPainted(false);
 		background.add(var);
+		
 		
 		
 		score=new JButton("");

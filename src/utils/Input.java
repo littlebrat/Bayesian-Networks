@@ -1,5 +1,9 @@
 package utils;
 
+import gui.WrongFileExtension;
+import gui.WrongInput;
+import gui.WrongScoreType;
+
 public class Input {
 	private String train;
 	private String test;

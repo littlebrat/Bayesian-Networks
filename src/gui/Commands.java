@@ -1,4 +1,4 @@
-package utils;
+package gui;
 
 import java.io.IOException;
 import java.util.ArrayList;
@@ -8,6 +8,7 @@ import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.ScrollPaneConstants;
 
+import utils.Input;
 import bayes.BayesDyn;
 import bayes.BayesStatic;
 import bayes.BayesianNetwork;
@@ -16,10 +17,10 @@ import data.DataTrain;
 
 @SuppressWarnings("serial")
 public class Commands extends JFrame{
-	JTextArea terminal;
+	JTextArea cmd;
 	JScrollPane scroll;
 	JFrame f;
-	protected BayesianNetwork dbn;
+	protected BayesianNetwork dbn=null;
 	protected BayesianNetwork sbn;
 	protected double time1;
 	protected double time2;
@@ -45,26 +46,26 @@ public class Commands extends JFrame{
 				int var=in.getVar();
 				double timetobuild = System.currentTimeMillis();
 				
-				
-				cmd.append("Learning...\n");
 				cmd.append("Train File:	"+in.getTrain()+"\n"+"Test File:	"+in.getTest()+"\n"+"Score:	"+score+"\n"+"Random Restarts:	"+randomrest+"\n"+"Variable Index:	"+var+"\n");
-				BayesianNetwork dbn = new BayesDyn(dtrain.get(),score,dtrain.getNames(),100);
+				
+				dbn = new BayesDyn(dtrain.get(),score,dtrain.getNames(),100);
 				dbn.setRestarts(randomrest);
 				dbn.greedyHill();
 				time1=(System.currentTimeMillis()-timetobuild)/1000;
-				BayesianNetwork sbn = new BayesStatic(dtrain.get(),score,dtrain.getNames(),100);
+				sbn = new BayesStatic(dtrain.getInitData(input[0]),score,dtrain.getNames(),100);
 				sbn.setRestarts(randomrest);
 				sbn.greedyHill();
 				
 				
-				cmd.append("Building DBN: 	"+time1+" time\n");
-				cmd.append("Initial network:\n");
+				cmd.append("\nBuilding DBN: 	"+time1+" time\n");
+				cmd.append("\nInitial network:\n");
 				cmd.append(sbn.toString());
-				cmd.append("Transition network:\n");
+				cmd.append("\nTransition network:\n");
+				
 				
 				cmd.append(dbn.toString());
 				String s=new String();
-				cmd.append("Performing inference:\n");
+				cmd.append("\nPerforming inference:\n");
 				//var specified
 				if(var!=0){
 					timetobuild=System.currentTimeMillis();
@@ -89,7 +90,7 @@ public class Commands extends JFrame{
 					
 				}
 				cmd.append(s);
-				cmd.append("Inferring with the DBN:" +time2+" time");
+				cmd.append("\nInferring with the DBN:" +time2+" time");
 				dados=save(dbn,sbn,s,time1,time2);
 				}catch(WrongInput e){
 					System.err.println("Correct Input Format: data-train, data-test, score, random-restarts, vars");
@@ -108,7 +109,10 @@ public class Commands extends JFrame{
 			
 		}
 		
-
+		public BayesianNetwork getDBN(){
+			return dbn;
+		}
+		
 		public ArrayList<String> save(BayesianNetwork dbn,BayesianNetwork sbn, String s,double time1,double time2) {
 			ArrayList<String> dados= new ArrayList<String>();
 			dados.add(dbn.toString());
