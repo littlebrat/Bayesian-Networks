@@ -14,11 +14,14 @@ public class BayesStatic implements BayesianNetwork{
 	private int nvars;
 	private int randomrst=0;
 	private String[] names;
+	Tabu tabu;
 	private int[][] learning;
 	private int[][] testing;
 	private Configurations cfgs;
 	
-	public BayesStatic(int[][] learning,int[][] testing,String s,String[] namevar){
+	public BayesStatic(int[][] learning,int[][] testing,String s,String[] namevar,int ntabu){
+		
+		tabu=new Tabu(ntabu);
 		this.testing=testing;
 		int[][] learn = new int[learning.length][learning[0].length/2];
 		for (int i = 0; i < learn.length; i++) {
@@ -68,7 +71,9 @@ public class BayesStatic implements BayesianNetwork{
 				if(i!=j){
 					intra=mynet.clone();
 					intra.add(i,j);
-					if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+					if(!(tabu.contains(intra))){
+						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+					}
 				}
 			}
 		}
@@ -84,7 +89,9 @@ public class BayesStatic implements BayesianNetwork{
 					if(i!=j){
 						intra=mynet.clone();
 						intra.remove(i,j);
-						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						if(!(tabu.contains(intra))){
+							if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						}
 					}
 				}
 			}
@@ -101,7 +108,9 @@ public class BayesStatic implements BayesianNetwork{
 					if(i!=j){
 						intra= mynet.clone();
 						intra.reverse(i,j);
-						if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						if(!(tabu.contains(intra))){
+							if(scr.getScore(intra)>scr.getScore(best)) best=intra;
+						}
 					}
 				}
 			}
@@ -136,6 +145,7 @@ public class BayesStatic implements BayesianNetwork{
 	
 	public void greedyHill() {
 		// TODO Auto-generated method stub
+		BayesStaticGraph aux;
 		int restarts=0;
 		Random rd = new Random();
 		BayesStaticGraph[] neighbours = new BayesStaticGraph[3];
@@ -155,7 +165,11 @@ public class BayesStatic implements BayesianNetwork{
 					bestscore=scr.getScore(grp);
 				}
 			}
-			if(scr.getScore(best)>scr.getScore(previous)) mynet=best;
+			if(scr.getScore(best)>scr.getScore(previous)){
+				mynet=best;
+				aux=mynet.clone();
+				tabu.add(aux);
+			}
 			else if(scr.getScore(best)==scr.getScore(previous) && restarts<randomrst){
 				int ops=(rd.nextInt(nvars)+1);
 				for(int i=0; i<ops;i++){
@@ -166,6 +180,7 @@ public class BayesStatic implements BayesianNetwork{
 			else flag=false;
 		}while(flag);
 		scr.makeEstimates();
+		mynet=best;
 	}
 
 	public static void main(String[] args) throws IOException {
@@ -175,7 +190,7 @@ public class BayesStatic implements BayesianNetwork{
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
 		String[] nomesranhosos = mydata.getNames();
-		BayesStatic mamen = new BayesStatic(learn,test,"MDL",nomesranhosos);
+		BayesStatic mamen = new BayesStatic(learn,test,"MDL",nomesranhosos,10);
 		mamen.setRestarts(2);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;

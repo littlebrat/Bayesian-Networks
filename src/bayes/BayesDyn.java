@@ -216,6 +216,7 @@ public class BayesDyn implements BayesianNetwork{
 			else flag=false;
 		}while(flag);
 		scr.makeEstimates();
+		mynet=best;
 	}
 
 	public int[] getPredictions(int var){
@@ -228,14 +229,14 @@ public class BayesDyn implements BayesianNetwork{
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
-		String[] nomesranhosos = mydata.getNames(args[0]);
-		BayesDyn mamen = new BayesDyn(learn,test,"LL",nomesranhosos,30);
-		mamen.setRestarts(10);
+		String[] nomesranhosos = mydata.getNames();
+		BayesDyn mamen = new BayesDyn(learn,test,"LL",nomesranhosos,1);
+		mamen.setRestarts(1000);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
 		System.out.println(mamen);
-		int[] pila = mamen.getPredictions(10);
+		int[] pila = mamen.getPredictions(7);
 		for (int i = 0; i < test.length; i++) {
 			System.out.println(pila[i]);
 		}
