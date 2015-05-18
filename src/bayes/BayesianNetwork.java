@@ -2,7 +2,11 @@ package bayes;
 
 public interface BayesianNetwork {
 	
-	public String toString();
+	void greedyHill();
 	
-	public void greedyHill();
+	void setRestarts(int n);
+	
+	int[] getPredictions(int var);
+
+	int[][] getAllPredictions();
 }
