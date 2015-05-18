@@ -151,7 +151,6 @@ public class BayesStatic implements BayesianNetwork{
 					best=grp;
 					bestscore=scr.getScore(grp);
 				}
-				System.out.println(scr.getScore(grp));
 			}
 			if(scr.getScore(best)>scr.getScore(previous)){
 				mynet=best;
