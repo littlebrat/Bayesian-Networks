@@ -43,15 +43,16 @@ public class BayesStatic implements BayesianNetwork{
 		String s= new String();
 		s="===Structure connectivity\n";
 		for(int i=0; i<nvars;i++){
-			s+="node "+names[i]+" at t+1: ";
+			s+=names[i]+": ";
 			for(int j=0; j<mynet.getParents(i).length;j++){
 				if(mynet.getParents(i)[j]<=nvars-1){
 					s+= names[mynet.getParents(i)[j]]+",";
 				}
 			}
+			s=s.substring(0,s.length()-1);
 			s+="\n";
 		}
-		s+="===Scores\n";
+		s+="\n===Scores\n";
 		Score scrLL = new ScoreLL(cfgs,learning,testing);
 		Score scrMDL = new ScoreMDL(cfgs,learning,testing);
 		s+="LL score: "+scrLL.getScore(mynet)+"\n";
@@ -173,9 +174,9 @@ public class BayesStatic implements BayesianNetwork{
 		int[][] learn = mydata.get();
 		int[][] test = mytest.get();
 		double timetobuild = System.currentTimeMillis();
-		String[] nomesranhosos = mydata.getNames(args[0]);
-		BayesStatic mamen = new BayesStatic(learn,test,"LL",nomesranhosos);
-		mamen.setRestarts(3);
+		String[] nomesranhosos = mydata.getNames();
+		BayesStatic mamen = new BayesStatic(learn,test,"MDL",nomesranhosos);
+		mamen.setRestarts(2);
 		mamen.greedyHill();
 		timetobuild = System.currentTimeMillis()-timetobuild;
 		System.out.println(timetobuild/1000+" seconds");
