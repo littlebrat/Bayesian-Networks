@@ -3,7 +3,13 @@ package bayes;
 import java.util.ArrayList;
 import java.util.List;
 
-//tem cuidado com os tipos de dados se e int/double
+/**
+ * Score is an abstract class that provides implementation for calculating scores, estimates and counts.
+ * @author Nuno Mendes
+ * @author Sofia Silva
+ * @author Tiago Ricardo 
+ */
+
 public abstract class Score {
 	protected Counts[] varcounts;
 	protected Estimates[] ests;
@@ -11,12 +17,23 @@ public abstract class Score {
 	protected Configurations cfg;
 	protected int[][] learning;
 	
+	/**
+	 * Constructor method that builds an object of this class, providing a setup for it.
+	 * @param cfg Configurations of the all the variables of the network.
+	 * @param tolearn Learning data set made with a 2-dimensional array of integers.
+	 */
 	protected Score(Configurations cfg,int[][] tolearn){
 		learning=tolearn;
 		this.cfg=cfg;
 		varcounts = new Counts[cfg.size()];
 	}
 	
+	/**
+	 * Constructor method that setups the score with a customized pseudo score.
+	 * @param cfg Configurations of the all the variables of the network.
+	 * @param tolearn Learning data set made with a 2-dimensional array of integers.
+	 * @param pseudo parameter customizable to the user that serves as a way of customizing the estimate calculation.
+	 */
 	@SuppressWarnings("static-access")
 	protected Score(Configurations cfg,int[][] tolearn,int pseudo){
 		learning=tolearn;
@@ -25,6 +42,11 @@ public abstract class Score {
 		this.pseudo=pseudo;
 	}
 	
+	/**
+	 * This method calculates the LL score of the graph passed as parameter.
+	 * @param grp Network
+	 * @return double precision value with the score for the network.
+	 */
 	protected double getLL(BayesGraph grp){
 		double res = 0;
 		double n,nj;
@@ -51,6 +73,11 @@ public abstract class Score {
 		return res;
 	}
 	
+	/**
+	 * Method that builds the association between the Score object and the Counts objects.
+	 * @param grp Network of the variables.
+	 */
+	
 	protected void makeCounts(BayesGraph grp){
 		ArrayList<int[]> fathers = new ArrayList<int[]>();
 		// construir a lista das configuracoes dos pais e iniciar os objectos das counts
@@ -75,7 +102,21 @@ public abstract class Score {
 		}
 	}
 	
+	/**
+	 * Calculates and returns the score of the network.
+	 * @param grp Network of the variables.
+	 * @return double precision value with the score of the network.
+	 */
+	
 	public abstract double getScore(BayesGraph grp);
+	
+	/**
+	 * Calculates an estimate (theta) if provided an index for a variable 'i', its parents global configuration 'j' and its value 'k'.
+	 * @param i variable index.
+	 * @param j global configuration for the parents configuration.
+	 * @param k value for the variable 'i'.
+	 * @return the theta for this parameters.
+	 */
 	
 	protected double getParameter(int i, int j, int k){
 		double res;
@@ -84,6 +125,10 @@ public abstract class Score {
 		res=(nk+pseudo)/(nj+cfg.ri(i)*pseudo);
 		return res;
 	}
+	
+	/**
+	 * Builds the association between the Score object and the Estimates objects.
+	 */
 	
 	protected void makeEstimates(){
 		ests=new Estimates[varcounts.length];
@@ -97,9 +142,22 @@ public abstract class Score {
 		}
 	}
 	
+	/**
+	 * Gets the estimate specified by the parameters
+	 * @param i variable index.
+	 * @param occur value combination for parent variables.
+	 * @param k value for the variable 'i'.
+	 * @return double precision value for its estimate.
+	 */
 	private double getTheta(int i,int[] occur,int k){
 		return ests[i].getParam(occur, k);
 	}
+	
+	/**
+	 * Given a restriction array, it produces a table with all the possible combination of free variables values.
+	 * @param restric Integer restriction array
+	 * @return a table of all possible combination of values with fixed variables.
+	 */
 	
 	private int[][] getAllEvents(int[] restric){
 		int lines=1;
@@ -126,6 +184,12 @@ public abstract class Score {
 		return res;
 	}
 	
+	/**
+	 * Give a line of occurrences it calculates the probability of that event to occur.
+	 * @param line array of integers with values of variables
+	 * @return double precision value with its probability
+	 */
+	
 	private double lineProbability(int[] line){
 		double res=1;
 		int[] fathers;
@@ -140,6 +204,14 @@ public abstract class Score {
 		}
 		return res;
 	}
+	
+	/**
+	 * It calculates the probability that a variable 'var' has of having a value 'k'.
+	 * @param var index of wanted variable.
+	 * @param k value of the variable.
+	 * @param test array of integers corresponding to occurrences.
+	 * @return double precision value with its probability
+	 */
 	
 	private double getVarProb(int var,int k,int[] test){
 		double res=0;
@@ -162,6 +234,13 @@ public abstract class Score {
 		return res;
 	}
 	
+	/**
+	 * Get the most probable value that the variable 'var' has.
+	 * @param var index of wanted variable.
+	 * @param test array of integers corresponding to occurrences.
+	 * @return integer value of the 'var'.
+	 */
+	
 	private int getVarValue(int var,int[] test){
 		int value=0;
 		double bestprob=-1;
@@ -175,6 +254,13 @@ public abstract class Score {
 		}
 		return value;
 	}
+	
+	/**
+	 * Get all the most probable values of the variable 'var' on the 'testing' data set
+	 * @param var index of wanted variable.
+	 * @param testing data set.
+	 * @return array of integers with the inferred values.
+	 */
 	
 	protected int[] getVarFromTests(int var, int[][] testing){
 		int[] res = new int[testing.length];
