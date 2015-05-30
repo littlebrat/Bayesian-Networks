@@ -39,6 +39,7 @@ public class Commands extends JFrame{
 	/**
 	 * Besides opening a JTextArea where the data is printed, the constructor also runs the algorithms and it prints the results on the JTextArea.
 	 * 
+	 * @param	input		An array of strings with the input parameters.
 	 * @see JTextArea
 	 * @see JScrollPane
 	 * @see BayesianNetwork
@@ -130,6 +131,11 @@ public class Commands extends JFrame{
 /**
  * This method saves the data inside an ArrayList of Strings.
  * 
+ * @param dbn		Dynamic Bayesian Network
+ * @param sbn		Static 	Bayesian Network
+ * @param s			String with the results of the inferences.
+ * @param time1		The time spent to build the DBN model.
+ * @param time2		The time spent to infer with the DBN model.
  * @see ArrayList
  * @see BayesianNetwork
  * @see SwingApplication
@@ -150,6 +156,7 @@ public class Commands extends JFrame{
  * This method allows other classes to access the protected element data that contains the obtained results.
  * 
  * @see ArrayList
+ * @return data		An ArrayList of strings that contains the results obtained after running the application.
  * 
  */
 		public ArrayList<String> getString() {

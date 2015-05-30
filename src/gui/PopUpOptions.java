@@ -1,12 +1,10 @@
 package gui;
 
 import java.awt.BorderLayout;
-import java.util.ArrayList;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
-import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JRadioButton;
@@ -35,15 +33,14 @@ public class PopUpOptions extends JFrame{
 
 /**
  *	Besides initializing the necessary fields and attributes, this constructor defines all the actions for the several JButtons through the callback mechanism addActionListener. 
- * 	The index of the random variable
- * 	The trainbutton and testbutton open the JFileChooser for both train file and test file, respectively. The helpbutton and infobutton open new frames that provide relevant information to the user. The parameterbutton opens
- * 	a new window that allows the user to select the parameters for the program. This parameters are stored in the fields built specifically for that purpose. The runbutton runs the program with the parameters picked by the user while
- * 	the savebutton's main function is to record the program results into a text file.
+ * 	The index of the random variable from which the user wants to know the most probable value is defined in the textVar field while the number of maximum random restarts is defined inside the textRandRest field.
+ * 	By pressing the JButtons randomrest,var and score, the user is saving the parameters inside variables that can be used to run application.
+ * 	Since there are only two available types of scores, two JRadioButtons and they are grouped into a ButtonGroup in order to keep active one of the buttons at a time.
  *
  * @see JButton
- * @see JFileChooser
- * @see ArrayList
- * 
+ * @see JTextField
+ * @see JRadioButton
+ * @see ButtonGroup
  * 
  */
 	
@@ -113,6 +110,13 @@ public class PopUpOptions extends JFrame{
 	    
 	}
 	
+/**
+ *	The method returns a string with the value defined in the textRandRest field.
+ *
+ * @see JTextField
+ * @return	rr		The maximum number of random restarts.
+ */
+		
 	String getRR(){
 		String rr=new String();
 		rr=textRandRest.getText();
@@ -122,6 +126,13 @@ public class PopUpOptions extends JFrame{
 		return rr;
 		
 	}
+
+	/**
+	 *	The method returns a string with the value defined for the index of the random variable.
+	 *	If no value was selected, all the random variables are considered.
+	 * @see JTextField
+	 * @return	var		The index of the random variable.
+	 */
 	
 	String getVar(){
 		String var=new String();
@@ -132,6 +143,12 @@ public class PopUpOptions extends JFrame{
 		return var;
 	}
 	
+	
+	/**
+	 *	The method returns a string with the type of Score defined with the JRadioButtons.
+	 * @see JRadioButton
+	 * @return	score		The type of score.
+	 */
 	String getScore(){
 		String score=new String();
 		if(scoreLL.isSelected()==true){

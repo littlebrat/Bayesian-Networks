@@ -16,6 +16,7 @@ public class Event {
 	
 	/**
 	 * Creates an element of type Event.
+	 * @param	size	Size of the vector of occurrences
 	 */
 	public Event(int size){
 		occurrences=new int[size];	

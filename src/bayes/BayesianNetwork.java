@@ -43,7 +43,6 @@ public interface BayesianNetwork {
 	 * Infers the most probable value for a certain random variable 
 	 * considering a test set and the learned network
 	 * 
-	 * @param var		random variable to get the most probable value
 	 * @param testing		Integer matrix containing test data 
 	 * @return				the inferred values for the given random variable
 	 */

@@ -124,6 +124,8 @@ public class BayesTransitionGraph extends AdjacencyList implements BayesGraph{
 	 * 
 	 * @param ori		origin node of the desired edge to be checked
 	 * @param dest		destination node of the desired edge to be checked
+	 * @return true	if the edge exist
+	 * @return false otherwise  
 	 */
 	
 	public boolean containsInter(int ori, int dest) {

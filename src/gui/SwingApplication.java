@@ -176,7 +176,7 @@ import javax.swing.JFileChooser;
 						});
 						
 						option.var.addActionListener(new ActionListener(){
-
+							
 							@Override
 							public void actionPerformed(ActionEvent arg0) {
 								var=option.getVar();
@@ -186,7 +186,7 @@ import javax.swing.JFileChooser;
 						
 
 						option.score.addActionListener(new ActionListener(){
-
+						
 							@Override
 							public void actionPerformed(ActionEvent arg0) {
 								score=option.getScore();
@@ -255,8 +255,11 @@ import javax.swing.JFileChooser;
 	/**
 	 *	The printFile method writes the results obtained after running the programming into a text file chosen by the user.
 	 *
-	 * @throws FileNotFoundException	 
-	 * @throws UnsupportedEncodingException
+	 * @param	input		An array of strings with the input parameters.
+	 * @param 	url			A string with the URL of the file.
+	 * @param	data		The ArrayList with the results obtained after pressing the runbutton.
+	 * @throws FileNotFoundException	 The file was not found.
+	 * @throws UnsupportedEncodingException		The encoding of the file is unsupported
 	 * @see ArrayList
 	 * 
 	 */

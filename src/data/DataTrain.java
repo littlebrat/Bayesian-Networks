@@ -101,6 +101,7 @@ public class DataTrain implements Data{
 	 * @see TimeSample
 	 * @see Event
 	 * @param url		 	String with the URL of the file
+	 * @return datainit		The values of the random variables at time instant 0
 	 */
 	public int[][] getInitData(String url) throws IOException {
 		int[][] datainit;
